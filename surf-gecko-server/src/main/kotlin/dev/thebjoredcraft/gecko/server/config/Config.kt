@@ -31,10 +31,10 @@ data class Config(
     data class TranslationsConfig(
         @Setting("repository")
         @Comment("GitHub repository (owner/name) the translations are fetched from on startup and on /i18n reload.")
-        val repository: String = "SLNE-Development/surf-gecko",
+        val repository: String = "TheBjoRedCraft/GeckoGames",
 
         @Setting("branch")
-        val branch: String = "version/26.2",
+        val branch: String = "master",
 
         @Setting("path")
         @Comment("Directory inside the repository that holds one folder per language, e.g. lang/de_de/*.json.")
