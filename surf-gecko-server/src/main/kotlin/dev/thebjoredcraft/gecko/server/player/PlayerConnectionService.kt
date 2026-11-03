@@ -17,7 +17,9 @@ object PlayerConnectionService : EventRegistrar {
     }
 
     private fun handleConnection(event: AsyncPlayerConfigurationEvent) {
-        if (!event.isFirstConfig) return
+        if (!event.isFirstConfig) {
+            return
+        }
 
         connectionLogger.info("${event.player.username} (${event.player.uuid}) connected from ${event.player.playerConnection.remoteAddress} on P${event.player.playerConnection.protocolVersion}")
     }
