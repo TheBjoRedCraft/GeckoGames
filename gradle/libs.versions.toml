@@ -2,7 +2,6 @@
 fabric-mixin = "0.17.3+mixin.0.8.7"
 mixin-extra = "0.5.4"
 asm = "9.10.1"
-polar = "1.16.0"
 wsee = "13.0.4"
 flare = "2.0.1" # matches the version minestom ships with
 adventure = "5.2.0" # matches the version minestom ships with
@@ -11,13 +10,9 @@ surf-database-r2dbc = "2.3.4"
 [libraries]
 fabric-mixin = { module = "net.fabricmc:sponge-mixin", version.ref = "fabric-mixin" }
 mixin-extra = { module = "io.github.llamalad7:mixinextras-common", version.ref = "mixin-extra" }
-polar = { module = "dev.hollowcube:polar", version.ref = "polar" }
 flare-fastutil = { module = "space.vectrix.flare:flare-fastutil", version.ref = "flare" }
 adventure-text-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
 wsee = { module = "net.worldseed.multipart:WorldSeedEntityEngine", version.ref = "wsee" }
 
-surf-redis-api = { module = "dev.slne.surf.redis:surf-redis-api", version = "+" }
-surf-core-api-common = { module = "dev.slne.surf.core:surf-core-api-common", version = "+" }
-surf-playtime-api-common = { module = "dev.slne.surf.playtime:surf-playtime-api-common", version = "+" }
 surf-bitmap-provider-common = { module = "dev.slne.surf.bitmap:surf-bitmap-provider-common", version = "+" }
 surf-database-r2dbc = { module = "dev.slne.surf:surf-database-r2dbc", version.ref = "surf-database-r2dbc" }

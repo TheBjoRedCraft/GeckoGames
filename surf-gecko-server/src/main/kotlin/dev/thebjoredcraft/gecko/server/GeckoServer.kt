@@ -3,7 +3,6 @@ package dev.thebjoredcraft.gecko.server
 import dev.thebjoredcraft.gecko.server.config.Config
 import dev.thebjoredcraft.gecko.server.gecko.GeckoInstance
 import dev.thebjoredcraft.gecko.server.performance.monitor.StatusBarService
-import dev.thebjoredcraft.gecko.server.redis.RedisService
 import kotlinx.coroutines.runBlocking
 import net.minestom.server.MinecraftServer
 import net.minestom.server.MinecraftServer.LOGGER
@@ -33,7 +32,7 @@ object GeckoServer {
             )
             minecraftServer.start(config.address.host, config.address.port)
 
-            RedisService.connect()
+            //RedisService.connect()
             GeckoInstance.enable()
 
             val startupDuration =
@@ -102,7 +101,7 @@ object GeckoServer {
         }
 
         try {
-            RedisService.disconnect()
+            //   RedisService.disconnect()
         } catch (currentFailure: Throwable) {
             LOGGER.error("Failed to disconnect from redis.", currentFailure)
             failure = failure.alsoSuppress(currentFailure)

@@ -1,13 +1,13 @@
 package dev.thebjoredcraft.gecko.server.gecko
 
-import dev.slne.surf.api.core.messages.adventure.*
+import dev.slne.surf.api.core.messages.adventure.key
+import dev.slne.surf.api.core.messages.adventure.showTitle
 import dev.slne.surf.api.core.util.random
 import dev.slne.surf.api.core.util.runAtFixedRate
 import dev.slne.surf.api.minestom.coroutine.minestomAsyncScope
 import dev.slne.surf.api.minestom.coroutine.ticks
 import dev.thebjoredcraft.gecko.common.game.GeckoGameInfo
 import dev.thebjoredcraft.gecko.server.database.repository.GeckoEventsRepository
-import dev.thebjoredcraft.gecko.server.gecko.antiafk.GeckoAntiAfkWatcher
 import dev.thebjoredcraft.gecko.server.gecko.display.scoreboard.GeckoScoreboardManager
 import dev.thebjoredcraft.gecko.server.gecko.events.GeckoEvent
 import dev.thebjoredcraft.gecko.server.gecko.heartbeat.GeckoHeartbeat
@@ -28,7 +28,6 @@ import dev.thebjoredcraft.gecko.server.gecko.stats.GeckoGameStatsTracker
 import dev.thebjoredcraft.gecko.server.gecko.visual.CountdownTitle
 import dev.thebjoredcraft.gecko.server.gecko.visual.ScreenFade
 import dev.thebjoredcraft.gecko.server.gecko.water.GeckoWaterDamager
-import dev.thebjoredcraft.gecko.server.i18n.*
 import dev.thebjoredcraft.gecko.server.i18n.*
 import dev.thebjoredcraft.gecko.server.util.secureRandom
 import kotlinx.coroutines.*
@@ -66,7 +65,8 @@ class GeckoGame(
     private val heartbeat = GeckoHeartbeat(this)
     private val orbSpawner = GeckoOrbSpawner(this)
     private val waterDamager = GeckoWaterDamager(this)
-    private val antiAfkWatcher = GeckoAntiAfkWatcher(this)
+
+    //private val antiAfkWatcher = GeckoAntiAfkWatcher(this)
     private val periodicBeamManager = PeriodicBeamManager(this)
 
     val lobbyPlayers = mutableSetOf<GeckoLobbyPlayer>()
@@ -110,7 +110,8 @@ class GeckoGame(
     fun stopHeartbeat() = heartbeat.stop()
     fun stopOrbSpawner() = orbSpawner.stop()
     fun stopWaterDamager() = waterDamager.stop()
-    fun stopAntiAfkWatcher() = antiAfkWatcher.stop()
+
+    //fun stopAntiAfkWatcher() = antiAfkWatcher.stop()
     fun stopPeriodicBeamManager() = periodicBeamManager.stop()
 
     fun isTeamDamage(attacker: GeckoGamePlayer, victim: GeckoGamePlayer) =
@@ -126,7 +127,7 @@ class GeckoGame(
         heartbeat.stop()
         orbSpawner.stop()
         waterDamager.stop()
-        antiAfkWatcher.stop()
+        //   antiAfkWatcher.stop()
         periodicBeamManager.stop()
         stopGameInfoBar()
         endingTimerSeconds = 10
@@ -427,7 +428,7 @@ class GeckoGame(
         }
         heartbeat.start()
         orbSpawner.start()
-        antiAfkWatcher.start()
+        // antiAfkWatcher.start()
         periodicBeamManager.start()
 
         if (settings.waterDamage) {

@@ -143,7 +143,7 @@ object GeckoGameManager {
         game.stopHeartbeat()
         game.stopOrbSpawner()
         game.stopWaterDamager()
-        game.stopAntiAfkWatcher()
+        //  game.stopAntiAfkWatcher()
         game.stopPeriodicBeamManager()
         game.stopGameInfoBar()
         game.gamePlayers.forEach {

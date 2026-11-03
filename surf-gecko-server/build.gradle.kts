@@ -10,8 +10,6 @@ repositories {
 surfMinestomServerApi {
     mainClass("dev.thebjoredcraft.gecko.server.MainKt")
 
-    withCoreCommon()
-    withSurfRedis()
     withSignedChat()
     withLuckPerms()
     withSpark()
@@ -20,7 +18,6 @@ surfMinestomServerApi {
     withPlugins()
 
     pluginDependencies {
-        register("surf-core-minestom")
         register("surf-bitmap-provider-minestom")
         register("surf-redis-minestom")
     }
@@ -29,14 +26,12 @@ surfMinestomServerApi {
 dependencies {
     implementation(projects.surfGeckoCommon)
 
-    compileOnly(libs.surf.playtime.api.common)
     compileOnly(libs.surf.bitmap.provider.common)
     implementation(libs.surf.database.r2dbc) {
         artifact { classifier = "all" }
     }
 
     implementation(libs.adventure.text.minimessage)
-    implementation(libs.polar)
     implementation(libs.wsee)
     compileOnly(libs.flare.fastutil)
 
