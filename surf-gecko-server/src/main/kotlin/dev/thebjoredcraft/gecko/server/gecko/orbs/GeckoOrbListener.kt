@@ -1,0 +1,46 @@
+package dev.thebjoredcraft.gecko.server.gecko.orbs
+
+import dev.slne.surf.api.minestom.event.EventRegistrar
+import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
+import dev.thebjoredcraft.gecko.server.gecko.player.game.GeckoGameRole
+import dev.thebjoredcraft.gecko.server.gecko.sound.GeckoSounds
+import dev.thebjoredcraft.gecko.server.i18n.PlayerLanguages
+import net.kyori.adventure.sound.Sound
+import net.minestom.server.entity.Player
+import net.minestom.server.event.Event
+import net.minestom.server.event.EventNode
+import net.minestom.server.event.item.PickupItemEvent
+
+class GeckoOrbListener : EventRegistrar {
+    override fun register(node: EventNode<Event>) {
+        node.addListener(PickupItemEvent::class.java) { handlePickup(it) }
+
+        PlayerLanguages.onChange { GeckoOrbs.relocalize(it) }
+    }
+
+    private fun handlePickup(event: PickupItemEvent) {
+        val stack = event.itemStack
+
+        if (!stack.hasTag(GeckoOrbs.ORB_TAG_KEY)) {
+            return
+        }
+
+        val player = event.livingEntity as? Player ?: return
+        val game = GeckoGameManager.findGame(player.uuid)
+        val gamePlayer = game?.findGamePlayer(player.uuid)
+
+        if (game == null || gamePlayer == null || !game.state.isGame() ||
+            gamePlayer.role == GeckoGameRole.SPECTATOR || gamePlayer.awaitingRespawn
+        ) {
+            event.isCancelled = true
+            return
+        }
+
+        if (!player.inventory.addItemStack(GeckoOrbs.localize(stack, player))) {
+            event.isCancelled = true
+            return
+        }
+
+        player.playSound(GeckoSounds.ORB_PICKUP, Sound.Emitter.self())
+    }
+}

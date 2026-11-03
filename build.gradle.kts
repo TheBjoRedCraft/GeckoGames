@@ -10,7 +10,7 @@ buildscript {
 }
 
 allprojects {
-    group = "dev.slne.surf.gecko"
+    group = "dev.thebjoredcraft.gecko"
     version = findProperty("version") as String
 
     repositories {

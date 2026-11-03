@@ -1,0 +1,26 @@
+package dev.thebjoredcraft.gecko.server.permission
+
+object PermissionList {
+    private const val BASE = "surf.gecko"
+    private const val BASE_SERVER = "$BASE.server"
+    private const val BASE_GAME = "$BASE.game"
+
+    const val COMMAND_I18N = "$BASE_SERVER.i18n.command"
+    const val COMMAND_LANGUAGE = "$BASE.language.command"
+    const val COMMAND_STOP = "$BASE_SERVER.stop.command"
+    const val COMMAND_STATUSBAR = "$BASE_SERVER.statusbar.command"
+    const val COMMAND_STATUSBAR_OTHERS = "$BASE_SERVER.statusbar.others.command"
+    const val COMMAND_GAMEMODE = "$BASE_GAME.gamemode.command"
+    const val COMMAND_TELEPORT = "$BASE_GAME.teleport.command"
+    const val COMMAND_MINIMESSAGE = "$BASE_GAME.minimessage.command"
+    const val COMMAND_GECKO = "$BASE_GAME.gecko.command"
+    const val COMMAND_SKIP = "$BASE_GAME.skip.command"
+    const val COMMAND_LOBBY = "$BASE_GAME.lobby.command"
+
+    const val COMMAND_PUNISH = "$BASE_GAME.punish.command"
+    const val COMMAND_JOINME = "$BASE_GAME.joinme.command"
+
+    const val DELETE_MESSAGE = "$BASE.delete-messages"
+    const val RISEUP = "$BASE.riseup"
+    const val ELYTRA_BOOST = "$BASE.elytra-boost"
+}

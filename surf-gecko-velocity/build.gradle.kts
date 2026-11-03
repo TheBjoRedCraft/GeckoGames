@@ -7,10 +7,10 @@ surfVelocityApi {
     withSurfRedis()
 }
 
-group = "dev.slne.surf.gecko.velocity"
+group = "dev.thebjoredcraft.gecko.velocity"
 
 velocityPluginFile {
-    main = "dev.slne.surf.gecko.velocity.VelocityMain"
+    main = "dev.thebjoredcraft.gecko.velocity.VelocityMain"
     authors = listOf("red")
 
     pluginDependencies {

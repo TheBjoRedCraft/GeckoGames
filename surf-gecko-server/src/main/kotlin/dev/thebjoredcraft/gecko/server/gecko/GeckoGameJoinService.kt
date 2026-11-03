@@ -1,0 +1,68 @@
+package dev.thebjoredcraft.gecko.server.gecko
+
+import dev.slne.surf.api.minestom.coroutine.minestomAsyncScope
+import dev.slne.surf.api.minestom.event.EventRegistrar
+import dev.slne.surf.api.minestom.extension.addListener
+import dev.thebjoredcraft.gecko.server.gecko.display.scoreboard.GeckoScoreboardManager
+import dev.thebjoredcraft.gecko.server.gecko.display.tablist.GeckoTablistRenderer
+import dev.thebjoredcraft.gecko.server.gecko.lobby.GeckoLobby
+import dev.thebjoredcraft.gecko.server.gecko.punishment.GeckoPunishmentService
+import dev.thebjoredcraft.gecko.server.gecko.social.SocialGroupManager
+import kotlinx.coroutines.launch
+import net.minestom.server.MinecraftServer
+import net.minestom.server.event.Event
+import net.minestom.server.event.EventNode
+import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
+import net.minestom.server.event.player.PlayerDisconnectEvent
+import net.minestom.server.event.player.PlayerSpawnEvent
+
+class GeckoGameJoinService : EventRegistrar {
+
+    override fun register(node: EventNode<Event>) {
+        node.addListener(::handleConfiguration)
+        node.addListener(::handleSpawn)
+        node.addListener(::handleDisconnect)
+    }
+
+    private fun handleConfiguration(event: AsyncPlayerConfigurationEvent) {
+        event.spawningInstance = GeckoLobby.instance
+        event.player.respawnPoint = GeckoLobby.spawn
+
+        SocialGroupManager.showLobby(event.player)
+    }
+
+    private fun handleSpawn(event: PlayerSpawnEvent) {
+        event.player.setReducedDebugScreenInformation(true)
+        GeckoTablistRenderer.reset(event.player.uuid)
+
+        MinecraftServer.getSchedulerManager().scheduleNextTick {
+            GeckoTablistRenderer.refresh()
+        }
+
+        if (event.isFirstSpawn) {
+            minestomAsyncScope.launch { GeckoPunishmentService.handleJoin(event.player) }
+        }
+
+        val game = GeckoGameManager.findGame(event.player.uuid)
+
+        if (game == null) {
+            GeckoScoreboardManager.hideSidebar(event.player)
+            return
+        }
+
+        GeckoScoreboardManager.showSidebar(game, event.player)
+    }
+
+    private fun handleDisconnect(event: PlayerDisconnectEvent) {
+        val player = event.player
+
+        GeckoScoreboardManager.hideSidebar(player)
+        SocialGroupManager.invalidate(player.uuid)
+
+        minestomAsyncScope.launch {
+            GeckoGameManager.handleGameLeave(player)
+            GeckoGameManager.releasePlayer(player.uuid)
+            GeckoPunishmentService.release(player.uuid)
+        }
+    }
+}

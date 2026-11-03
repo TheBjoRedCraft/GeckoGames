@@ -1,4 +1,4 @@
-package dev.slne.surf.gecko.map.creator.draft
+package dev.thebjoredcraft.gecko.map.creator.draft
 
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor

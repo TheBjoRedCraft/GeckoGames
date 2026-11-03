@@ -1,4 +1,4 @@
-package dev.slne.surf.gecko.map.creator.export
+package dev.thebjoredcraft.gecko.map.creator.export
 
 import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers

@@ -1,0 +1,19 @@
+package dev.thebjoredcraft.gecko.server.gecko.command
+
+import dev.slne.surf.api.minestom.command.dsl.commandTree
+import dev.slne.surf.api.minestom.command.dsl.playerExecutorSuspend
+import dev.thebjoredcraft.gecko.server.gecko.lobby.GeckoLobby
+import dev.thebjoredcraft.gecko.server.gecko.visual.ScreenFade
+import dev.thebjoredcraft.gecko.server.i18n.sendTranslated
+import dev.thebjoredcraft.gecko.server.permission.PermissionList
+
+fun lobbyCommand() = commandTree("lobby") {
+    withPermission(PermissionList.COMMAND_LOBBY)
+
+    playerExecutorSuspend { player, _ ->
+        ScreenFade.transition(listOf(player))
+        GeckoLobby.join(player)
+
+        player.sendTranslated("command.lobby.joined")
+    }
+}

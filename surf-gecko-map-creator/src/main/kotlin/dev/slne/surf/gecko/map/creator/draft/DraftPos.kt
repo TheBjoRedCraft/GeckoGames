@@ -1,4 +1,4 @@
-package dev.slne.surf.gecko.map.creator.draft
+package dev.thebjoredcraft.gecko.map.creator.draft
 
 import org.bukkit.Location
 import org.bukkit.World

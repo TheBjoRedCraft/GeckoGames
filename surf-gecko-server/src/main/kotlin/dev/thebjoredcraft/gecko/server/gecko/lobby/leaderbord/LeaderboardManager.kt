@@ -1,0 +1,226 @@
+package dev.thebjoredcraft.gecko.server.gecko.lobby.leaderbord
+
+import dev.slne.surf.api.core.messages.Colors
+import dev.slne.surf.api.core.messages.adventure.buildText
+import dev.slne.surf.api.core.messages.adventure.text
+import dev.slne.surf.api.core.util.runAtFixedRate
+import dev.slne.surf.api.minestom.coroutine.MinestomDispatchers
+import dev.slne.surf.api.minestom.coroutine.minestomAsyncScope
+import dev.slne.surf.api.minestom.coroutine.minestomScope
+import dev.thebjoredcraft.gecko.server.database.repository.GeckoLeaderboardRepository
+import dev.thebjoredcraft.gecko.server.database.repository.GeckoPlayerNameRepository
+import dev.thebjoredcraft.gecko.server.event.register
+import dev.thebjoredcraft.gecko.server.gecko.lobby.GeckoLobby
+import dev.thebjoredcraft.gecko.server.i18n.PlayerLanguages
+import dev.thebjoredcraft.gecko.server.i18n.translate
+import dev.thebjoredcraft.gecko.server.i18n.translatePlain
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.TextColor
+import net.kyori.adventure.text.format.TextDecoration
+import net.minestom.server.MinecraftServer
+import net.minestom.server.entity.Player
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
+
+object LeaderboardManager {
+    private const val TOP_SIZE = 7
+    private val minRefreshAge = 3.seconds
+
+    private val snapshots = ConcurrentHashMap<LeaderboardType, LeaderboardSnapshot>()
+    private val holograms = ConcurrentHashMap<UUID, Map<LeaderboardType, LeaderboardHologram>>()
+    private val refreshMutex = Mutex()
+
+    @Volatile
+    private var lastRefresh = 0L
+
+    private var refreshJob: Job? = null
+
+    suspend fun init() {
+        LeaderboardListener.register()
+
+        PlayerLanguages.onChange { player ->
+            val playerHolograms = holograms[player.uuid] ?: return@onChange
+
+            minestomScope.launch {
+                update(player, playerHolograms)
+            }
+        }
+
+        refreshJob = minestomAsyncScope.runAtFixedRate(5.minutes) {
+            refresh()
+            updateAll()
+        }
+    }
+
+    fun shutdown() {
+        refreshJob?.cancel()
+        refreshJob = null
+
+        holograms.keys.toList().forEach { invalidate(it) }
+    }
+
+    suspend fun show(player: Player) {
+        if (!GeckoLobby.contains(player)) {
+            return
+        }
+
+        refreshIfDirty()
+
+        withContext(MinestomDispatchers.Main) {
+            if (!player.isOnline || !GeckoLobby.contains(player)) {
+                return@withContext
+            }
+
+            val playerHolograms = holograms.computeIfAbsent(player.uuid) { playerUuid ->
+                LeaderboardType.entries.associateWith { type ->
+                    LeaderboardHologram(playerUuid).also {
+                        it.spawn(GeckoLobby.instance, type.position)
+                    }
+                }
+            }
+
+            update(player, playerHolograms)
+        }
+    }
+
+    fun invalidate(playerUuid: UUID) {
+        val playerHolograms = holograms.remove(playerUuid) ?: return
+
+        minestomScope.launch {
+            playerHolograms.values.forEach { it.remove() }
+        }
+    }
+
+    private suspend fun refresh() = refreshMutex.withLock { collectSnapshots() }
+
+    private suspend fun refreshIfDirty() {
+        refreshMutex.withLock {
+            if (checkDirty()) {
+                collectSnapshots()
+            }
+        }
+    }
+
+    private fun checkDirty() =
+        System.currentTimeMillis() - lastRefresh >= minRefreshAge.inWholeMilliseconds
+
+    private suspend fun collectSnapshots() {
+        val totals = mapOf(
+            LeaderboardType.WINS to GeckoLeaderboardRepository.fetchWinTotals(),
+            LeaderboardType.GAMES_PLAYED to GeckoLeaderboardRepository.fetchGamesPlayedTotals()
+        )
+
+        val topUuids = totals.values
+            .flatMap { entries -> entries.take(TOP_SIZE) }
+            .mapTo(mutableSetOf()) { it.playerUuid }
+
+        val names = GeckoPlayerNameRepository.fetchNames(topUuids)
+
+        totals.forEach { (type, entries) ->
+            snapshots[type] = LeaderboardSnapshot.of(entries, names, TOP_SIZE)
+        }
+
+        lastRefresh = System.currentTimeMillis()
+    }
+
+    private suspend fun updateAll() = withContext(MinestomDispatchers.Main) {
+        holograms.forEach { (playerUuid, playerHolograms) ->
+            val player = MinecraftServer.getConnectionManager().getOnlinePlayerByUuid(playerUuid)
+
+            if (player == null) {
+                invalidate(playerUuid)
+            } else {
+                update(player, playerHolograms)
+            }
+        }
+    }
+
+    private fun update(
+        player: Player,
+        playerHolograms: Map<LeaderboardType, LeaderboardHologram>
+    ) = playerHolograms.forEach { (type, hologram) -> hologram.update(render(type, player)) }
+
+    private fun render(type: LeaderboardType, player: Player): Component {
+        val snapshot = snapshots[type] ?: LeaderboardSnapshot.EMPTY
+        val place = snapshot.place(player.uuid)
+
+        return buildText {
+            appendNewline()
+            append(
+                player.translate("lobby.leaderboard.${type.id}.title")
+                    .colorIfAbsent(LEADERBOARD_COLOR)
+                    .decorate(TextDecoration.BOLD)
+            )
+            appendNewline()
+
+            if (snapshot.top.isEmpty()) {
+                append(player.translate("lobby.leaderboard.empty"))
+            } else {
+                for (rank in 1..TOP_SIZE) {
+                    val entry = snapshot.top.getOrNull(rank - 1)
+
+                    appendNewline()
+                    if (entry != null) {
+                        append(
+                            row(
+                                player,
+                                type,
+                                entry.rank.toString(),
+                                entry.name
+                                    ?: player.translatePlain("lobby.leaderboard.unknown-player"),
+                                entry.value
+                            )
+                        )
+                    } else {
+                        append(row(player, type, rank.toString(), "???", 0L))
+                    }
+                }
+            }
+
+            appendNewline()
+            appendNewline()
+            append(
+                player.translate(
+                    "lobby.leaderboard.self",
+                    "value" to valueText(player, type, place?.value?.toString() ?: "-"),
+                    "rank" to coloredRank(place?.rank?.toString() ?: "-")
+                )
+            )
+            appendNewline()
+        }
+    }
+
+    private fun row(
+        player: Player,
+        type: LeaderboardType,
+        rank: String,
+        name: String,
+        value: Long
+    ) = player.translate(
+        "lobby.leaderboard.row",
+        "rank" to coloredRank(rank),
+        "name" to name,
+        "value" to valueText(player, type, value)
+    )
+
+    private fun valueText(player: Player, type: LeaderboardType, value: Any) =
+        player.translate("lobby.leaderboard.${type.id}.value", "value" to value)
+            .colorIfAbsent(LEADERBOARD_COLOR)
+
+    private fun coloredRank(rank: String) = when (rank) {
+        "1" -> text("#1", TextColor.fromHexString("#F1FA7F"))
+        "2" -> text("#2", TextColor.fromHexString("#868689"))
+        "3" -> text("#3", TextColor.fromHexString("#D5A528"))
+        "-" -> text("-", Colors.SPACER)
+        else -> text("#$rank", Colors.SPACER)
+    }
+
+    private val LEADERBOARD_COLOR = TextColor.fromHexString("#71FB7E")
+}

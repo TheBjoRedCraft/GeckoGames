@@ -8,7 +8,7 @@ repositories {
 }
 
 surfMinestomServerApi {
-    mainClass("dev.slne.surf.gecko.server.MainKt")
+    mainClass("dev.thebjoredcraft.gecko.server.MainKt")
 
     withCoreCommon()
     withSurfRedis()
@@ -81,7 +81,7 @@ afterEvaluate {
 
         manifest {
             attributes["Surf-Delegate-Agent-Classes"] =
-                "dev.slne.surf.gecko.server.instrumentation.GeckoRunner"
+                "dev.thebjoredcraft.gecko.server.instrumentation.GeckoRunner"
             attributes["Can-Redefine-Classes"] = "true"
             attributes["Can-Retransform-Classes"] = "true"
 

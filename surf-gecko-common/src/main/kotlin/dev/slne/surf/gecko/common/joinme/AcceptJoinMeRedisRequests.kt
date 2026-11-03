@@ -1,4 +1,4 @@
-package dev.slne.surf.gecko.common.joinme
+package dev.thebjoredcraft.gecko.common.joinme
 
 import dev.slne.surf.api.core.serializer.java.uuid.SerializableUUID
 import dev.slne.surf.core.api.common.server.SurfServer

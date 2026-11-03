@@ -1,0 +1,58 @@
+package dev.thebjoredcraft.gecko.server.gecko.map
+
+import dev.slne.surf.api.core.messages.adventure.key
+import dev.thebjoredcraft.gecko.server.bootstrapLogger
+import dev.thebjoredcraft.gecko.server.event.register
+import dev.thebjoredcraft.gecko.server.gecko.map.mechanic.GeckoMapMechanic
+import dev.thebjoredcraft.gecko.server.gecko.map.mechanic.impl.VentMechanic
+import kotlinx.coroutines.coroutineScope
+import net.minestom.server.MinecraftServer
+import net.minestom.server.entity.EntityType
+import net.minestom.server.instance.InstanceContainer
+import net.minestom.server.instance.anvil.AnvilLoader
+import kotlin.io.path.Path
+
+object GeckoMapManager {
+    suspend fun prepareMap(map: GeckoMap): InstanceContainer = coroutineScope {
+        val worldPath = Path("maps/${map.mapName}")
+        val map = MinecraftServer.getInstanceManager()
+            .createInstanceContainer(
+                AnvilLoader(
+                    worldPath,
+                    key("minecraft:overworld")
+                )
+            )
+
+        MapEntityLoader(worldPath, listOf(EntityType.TEXT_DISPLAY)).install(map)
+
+        map.defaultClock()?.pause()
+
+        map
+    }
+
+    private val mechanics = mutableListOf<GeckoMapMechanic>()
+
+    suspend fun registerMechanics() {
+        bootstrapLogger.info("Registering map mechanics...")
+        registerMechanic(VentMechanic)
+        bootstrapLogger.info("Registered ${mechanics.size} map mechanics")
+    }
+
+    suspend fun unregisterMechanics() {
+        mechanics.forEach {
+            it.stop()
+        }
+    }
+
+    private suspend fun registerMechanic(mechanic: GeckoMapMechanic) {
+        mechanics.add(mechanic)
+
+        mechanic.listeners.forEach {
+            it.register()
+        }
+
+        mechanic.start()
+
+        bootstrapLogger.info("Registered mechanic ${mechanic::class.simpleName}")
+    }
+}

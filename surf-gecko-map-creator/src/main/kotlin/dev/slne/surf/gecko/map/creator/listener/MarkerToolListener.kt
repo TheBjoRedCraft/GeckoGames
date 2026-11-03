@@ -1,14 +1,14 @@
-package dev.slne.surf.gecko.map.creator.listener
+package dev.thebjoredcraft.gecko.map.creator.listener
 
 import dev.slne.surf.api.core.messages.adventure.buildText
 import dev.slne.surf.api.core.messages.adventure.sendText
-import dev.slne.surf.gecko.map.creator.PaperGeckoMapManager
-import dev.slne.surf.gecko.map.creator.command.sendDraftOverview
-import dev.slne.surf.gecko.map.creator.draft.DraftPos
-import dev.slne.surf.gecko.map.creator.draft.GeckoMapDraft
-import dev.slne.surf.gecko.map.creator.draft.GeckoPoiType
-import dev.slne.surf.gecko.map.creator.item.MarkerItems
-import dev.slne.surf.gecko.map.creator.render.MarkerRenderer
+import dev.thebjoredcraft.gecko.map.creator.PaperGeckoMapManager
+import dev.thebjoredcraft.gecko.map.creator.command.sendDraftOverview
+import dev.thebjoredcraft.gecko.map.creator.draft.DraftPos
+import dev.thebjoredcraft.gecko.map.creator.draft.GeckoMapDraft
+import dev.thebjoredcraft.gecko.map.creator.draft.GeckoPoiType
+import dev.thebjoredcraft.gecko.map.creator.item.MarkerItems
+import dev.thebjoredcraft.gecko.map.creator.render.MarkerRenderer
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler

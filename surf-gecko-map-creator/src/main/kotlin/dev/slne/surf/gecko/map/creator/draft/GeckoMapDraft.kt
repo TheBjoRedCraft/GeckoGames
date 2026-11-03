@@ -1,4 +1,4 @@
-package dev.slne.surf.gecko.map.creator.draft
+package dev.thebjoredcraft.gecko.map.creator.draft
 
 import dev.slne.surf.api.core.util.mutableObjectListOf
 import it.unimi.dsi.fastutil.objects.ObjectList
@@ -15,7 +15,8 @@ class GeckoMapDraft(
     val authors = mutableObjectListOf<DraftAuthor>()
 
     private val singleLocations = EnumMap<GeckoPoiType, DraftPos>(GeckoPoiType::class.java)
-    private val multiLocations = EnumMap<GeckoPoiType, ObjectList<DraftPos>>(GeckoPoiType::class.java)
+    private val multiLocations =
+        EnumMap<GeckoPoiType, ObjectList<DraftPos>>(GeckoPoiType::class.java)
 
     fun locations(type: GeckoPoiType): List<DraftPos> = if (type.multiple) {
         multiLocations[type] ?: emptyList()

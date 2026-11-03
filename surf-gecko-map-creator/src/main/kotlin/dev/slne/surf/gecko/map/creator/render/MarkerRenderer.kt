@@ -1,7 +1,7 @@
 @file:OptIn(NmsUseWithCaution::class)
 @file:Suppress("UnstableApiUsage")
 
-package dev.slne.surf.gecko.map.creator.render
+package dev.thebjoredcraft.gecko.map.creator.render
 
 import com.github.shynixn.mccoroutine.folia.entityDispatcher
 import com.github.shynixn.mccoroutine.folia.scope
@@ -10,10 +10,10 @@ import dev.slne.surf.api.core.util.runAtFixedRate
 import dev.slne.surf.api.paper.nms.NmsUseWithCaution
 import dev.slne.surf.api.paper.nms.bridges.packets.PacketOperation
 import dev.slne.surf.api.paper.nms.bridges.packets.entity.SurfPaperNmsSpawnPackets
-import dev.slne.surf.gecko.map.creator.PaperGeckoMapManager
-import dev.slne.surf.gecko.map.creator.draft.DraftPos
-import dev.slne.surf.gecko.map.creator.draft.GeckoPoiType
-import dev.slne.surf.gecko.map.creator.plugin
+import dev.thebjoredcraft.gecko.map.creator.PaperGeckoMapManager
+import dev.thebjoredcraft.gecko.map.creator.draft.DraftPos
+import dev.thebjoredcraft.gecko.map.creator.draft.GeckoPoiType
+import dev.thebjoredcraft.gecko.map.creator.plugin
 import io.papermc.paper.math.Position
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import kotlinx.coroutines.Job

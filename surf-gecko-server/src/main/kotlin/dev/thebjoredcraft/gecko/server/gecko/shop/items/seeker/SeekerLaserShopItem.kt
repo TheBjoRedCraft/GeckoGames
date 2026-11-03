@@ -1,0 +1,55 @@
+package dev.thebjoredcraft.gecko.server.gecko.shop.items.seeker
+
+import dev.slne.surf.api.core.messages.Colors
+import dev.slne.surf.api.minestom.coroutine.minestomScope
+import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
+import dev.thebjoredcraft.gecko.server.gecko.player.game.GeckoGameRole
+import dev.thebjoredcraft.gecko.server.gecko.shop.ShopItem
+import dev.thebjoredcraft.gecko.server.gecko.shop.activeHiders
+import dev.thebjoredcraft.gecko.server.gecko.shop.activeSeekers
+import dev.thebjoredcraft.gecko.server.gecko.shop.effect.beam.BeamEffect
+import dev.thebjoredcraft.gecko.server.gecko.shop.effect.beam.ParticleBeam
+import dev.thebjoredcraft.gecko.server.gecko.shop.type.ShopItemType
+import dev.thebjoredcraft.gecko.server.gecko.sound.GeckoSounds
+import kotlinx.coroutines.launch
+import net.kyori.adventure.sound.Sound
+import net.minestom.server.entity.Player
+import net.minestom.server.item.ItemStack
+import net.minestom.server.item.Material
+import kotlin.time.Duration.Companion.seconds
+
+object SeekerLaserShopItem : ShopItem {
+    override val id = "seeker_laser"
+    override val price = 12
+    override val maps = null
+    override val roles = listOf(GeckoGameRole.SEEKER)
+    override val types = listOf(ShopItemType.SEEKER_SEARCH)
+    private val beam = ParticleBeam(Colors.ERROR, height = 50.0)
+
+    override val item: ItemStack = ItemStack.of(Material.BEACON)
+
+    override fun onUse(player: Player): Boolean {
+        val game = GeckoGameManager.findGame(player.uuid) ?: return false
+        val gamePlayer = game.findGamePlayer(player.uuid) ?: return false
+
+        if (!game.state.isGame() || gamePlayer.role != GeckoGameRole.SEEKER) {
+            return false
+        }
+
+        val origins = game.activeHiders().map { it.position.asVec() }
+
+        if (origins.isEmpty()) {
+            return true
+        }
+
+        val seekers = game.activeSeekers().toSet()
+
+        seekers.forEach { it.playSound(GeckoSounds.SHOP_LASER, Sound.Emitter.self()) }
+
+        minestomScope.launch {
+            BeamEffect(seekers, origins, beam).playFor(7.5.seconds)
+        }
+
+        return true
+    }
+}

@@ -1,0 +1,86 @@
+package dev.thebjoredcraft.gecko.server.gecko.hotbar
+
+import dev.slne.surf.api.minestom.coroutine.minestomAsyncScope
+import dev.slne.surf.api.minestom.event.EventRegistrar
+import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
+import dev.thebjoredcraft.gecko.server.gecko.lobby.GeckoLobby
+import dev.thebjoredcraft.gecko.server.gecko.visual.ScreenFade
+import dev.thebjoredcraft.gecko.server.i18n.PlayerLanguages
+import dev.thebjoredcraft.gecko.server.i18n.sendTranslated
+import kotlinx.coroutines.launch
+import net.minestom.server.entity.Player
+import net.minestom.server.event.Event
+import net.minestom.server.event.EventListener
+import net.minestom.server.event.EventNode
+import net.minestom.server.event.player.PlayerBlockInteractEvent
+import net.minestom.server.event.player.PlayerEntityInteractEvent
+import net.minestom.server.event.player.PlayerUseItemEvent
+import net.minestom.server.item.ItemStack
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+
+class GeckoHotbarListener : EventRegistrar {
+    override fun register(node: EventNode<Event>) {
+        node.addListener(
+            EventListener.builder(PlayerUseItemEvent::class.java)
+                .ignoreCancelled(false)
+                .handler { handleInteract(it.player, it.itemStack) }
+                .build()
+        )
+        node.addListener(
+            EventListener.builder(PlayerBlockInteractEvent::class.java)
+                .ignoreCancelled(false)
+                .handler { handleInteract(it.player, it.player.getItemInHand(it.hand)) }
+                .build()
+        )
+        node.addListener(PlayerEntityInteractEvent::class.java) {
+            handleInteract(it.player, it.player.getItemInHand(it.hand))
+        }
+
+        PlayerLanguages.onChange { GeckoHotbarItems.relocalize(it) }
+    }
+
+    private fun handleInteract(player: Player, item: ItemStack) {
+        val action = GeckoHotbarAction.of(item) ?: return
+
+        if (!debounce(player)) {
+            return
+        }
+
+        minestomAsyncScope.launch {
+            ScreenFade.transition(listOf(player))
+            when (action) {
+                GeckoHotbarAction.LOBBY -> GeckoLobby.join(player)
+                GeckoHotbarAction.NEXT_ROUND -> joinNextRound(player)
+            }
+        }
+    }
+
+    private suspend fun joinNextRound(player: Player) {
+        GeckoGameManager.handleGameLeave(player)
+        GeckoGameManager.clearDirtyData(player.uuid)
+
+        if (GeckoGameManager.selectGame(player) != null) {
+            return
+        }
+
+        GeckoLobby.join(player)
+
+        player.sendTranslated("game.hotbar.no-round")
+    }
+
+    private val lastUseAt = ConcurrentHashMap<UUID, Long>()
+
+    private fun debounce(player: Player): Boolean {
+        val now = System.currentTimeMillis()
+        var allowed = false
+
+        lastUseAt.compute(player.uuid) { _, previous ->
+            allowed = previous == null || now - previous >= 500L
+
+            if (allowed) now else previous
+        }
+
+        return allowed
+    }
+}

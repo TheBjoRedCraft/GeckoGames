@@ -1,13 +1,13 @@
-package dev.slne.surf.gecko.map.creator.export
+package dev.thebjoredcraft.gecko.map.creator.export
 
-import dev.slne.surf.gecko.map.creator.draft.DraftPos
-import dev.slne.surf.gecko.map.creator.draft.GeckoMapDraft
-import dev.slne.surf.gecko.map.creator.draft.GeckoPoiType
+import dev.thebjoredcraft.gecko.map.creator.draft.DraftPos
+import dev.thebjoredcraft.gecko.map.creator.draft.GeckoMapDraft
+import dev.thebjoredcraft.gecko.map.creator.draft.GeckoPoiType
 import java.time.OffsetDateTime
 import java.util.*
 
 object GeckoMapCodeGenerator {
-    private const val BASE_PACKAGE = "dev.slne.surf.gecko.server.gecko.map.maps"
+    private const val BASE_PACKAGE = "dev.thebjoredcraft.gecko.server.gecko.map.maps"
     private const val SOURCE_ROOT = "surf-gecko-server/src/main/kotlin"
 
     fun packageName(draft: GeckoMapDraft) = "$BASE_PACKAGE.${packageSegment(draft.mapName)}"
@@ -21,7 +21,7 @@ object GeckoMapCodeGenerator {
         buildString {
             appendLine("package ${packageName(draft)}")
             appendLine()
-            appendLine("import dev.slne.surf.gecko.server.gecko.map.GeckoMap")
+            appendLine("import dev.thebjoredcraft.gecko.server.gecko.map.GeckoMap")
             appendLine("import net.minestom.server.coordinate.Pos")
             appendLine("import java.time.OffsetDateTime")
             appendLine("import java.util.*")

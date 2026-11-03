@@ -1,4 +1,4 @@
-package dev.slne.surf.gecko.velocity
+package dev.thebjoredcraft.gecko.velocity
 
 import com.github.shynixn.mccoroutine.velocity.SuspendingPluginContainer
 import com.google.inject.Inject

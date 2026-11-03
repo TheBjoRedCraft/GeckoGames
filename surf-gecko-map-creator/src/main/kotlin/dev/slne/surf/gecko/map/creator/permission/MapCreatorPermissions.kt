@@ -1,4 +1,4 @@
-package dev.slne.surf.gecko.map.creator.permission
+package dev.thebjoredcraft.gecko.map.creator.permission
 
 import dev.slne.surf.api.paper.permission.PermissionRegistry
 

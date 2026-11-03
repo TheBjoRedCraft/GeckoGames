@@ -1,17 +1,17 @@
-package dev.slne.surf.gecko.velocity.handler
+package dev.thebjoredcraft.gecko.velocity.handler
 
 import com.github.shynixn.mccoroutine.velocity.launch
 import com.velocitypowered.api.proxy.Player
 import dev.slne.surf.api.core.messages.adventure.sendText
 import dev.slne.surf.api.core.messages.adventure.uuidOrNull
-import dev.slne.surf.gecko.common.joinme.AcceptJoinMeRedisRequest
-import dev.slne.surf.gecko.common.joinme.AcceptJoinMeRedisResponse
-import dev.slne.surf.gecko.common.joinme.PublishJoinMeRedisEvent
-import dev.slne.surf.gecko.velocity.plugin
-import dev.slne.surf.gecko.velocity.proxy
-import dev.slne.surf.gecko.velocity.redisApi
 import dev.slne.surf.redis.event.OnRedisEvent
-import java.util.Locale
+import dev.thebjoredcraft.gecko.common.joinme.AcceptJoinMeRedisRequest
+import dev.thebjoredcraft.gecko.common.joinme.AcceptJoinMeRedisResponse
+import dev.thebjoredcraft.gecko.common.joinme.PublishJoinMeRedisEvent
+import dev.thebjoredcraft.gecko.velocity.plugin
+import dev.thebjoredcraft.gecko.velocity.proxy
+import dev.thebjoredcraft.gecko.velocity.redisApi
+import java.util.*
 
 object GeckoVelocityRedisHandler {
     @OnRedisEvent
@@ -34,7 +34,8 @@ object GeckoVelocityRedisHandler {
                         }.getOrNull()
 
                         if (response == null || !response.result.isSuccess()) {
-                            val locale = (audience as? Player)?.effectiveLocale ?: player.effectiveLocale
+                            val locale =
+                                (audience as? Player)?.effectiveLocale ?: player.effectiveLocale
                             audience.sendText {
                                 appendErrorPrefix()
                                 error(failureMessage(locale, response?.result))

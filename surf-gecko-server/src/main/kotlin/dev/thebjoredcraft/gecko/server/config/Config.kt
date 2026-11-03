@@ -1,0 +1,157 @@
+package dev.thebjoredcraft.gecko.server.config
+
+import net.minestom.server.Auth
+import org.spongepowered.configurate.objectmapping.ConfigSerializable
+import org.spongepowered.configurate.objectmapping.meta.Comment
+import org.spongepowered.configurate.objectmapping.meta.Setting
+
+@ConfigSerializable
+data class Config(
+    @Setting("address")
+    val address: AddressConfig = AddressConfig(),
+
+    @Setting("velocity")
+    val velocity: VelocityConfig = VelocityConfig(),
+
+    @Setting("performance")
+    val performance: PerformanceConfig = PerformanceConfig(),
+
+    @Setting("chat")
+    val chat: ChatConfig = ChatConfig(),
+
+    @Setting("translations")
+    val translations: TranslationsConfig = TranslationsConfig(),
+
+    @Setting("max-players")
+    @Comment("Player limit reported on the server list and enforced by the extensions.")
+    val maxPlayers: Int = 100,
+) {
+
+    @ConfigSerializable
+    data class TranslationsConfig(
+        @Setting("repository")
+        @Comment("GitHub repository (owner/name) the translations are fetched from on startup and on /i18n reload.")
+        val repository: String = "SLNE-Development/surf-gecko",
+
+        @Setting("branch")
+        val branch: String = "version/26.2",
+
+        @Setting("path")
+        @Comment("Directory inside the repository that holds one folder per language, e.g. lang/de_de/*.json.")
+        val path: String = "surf-gecko-translations/lang",
+
+        @Setting("token")
+        @Comment("Optional GitHub token, required if the repository is private.")
+        val token: String = "",
+
+        @Setting("cache-directory")
+        @Comment("Last successfully fetched translations, used when GitHub cannot be reached.")
+        val cacheDirectory: String = "translations",
+    )
+
+    @ConfigSerializable
+    data class AddressConfig(
+        @Comment("Address on which the server listens.")
+        val host: String = "0.0.0.0",
+
+        @Comment("Port on which the server listens.")
+        val port: Int = 25565,
+    )
+
+    @ConfigSerializable
+    data class VelocityConfig(
+        val enabled: Boolean = false,
+        val secret: String = "secret"
+    ) {
+        fun createAuth(): Auth = if (enabled) {
+            Auth.Velocity(secret)
+        } else {
+            Auth.Online()
+        }
+    }
+
+    @ConfigSerializable
+    data class DatabasePoolConfig(
+        @Setting("maximum-size")
+        @Comment("Maximum number of physical database connections.")
+        val maximumSize: Int = 10,
+
+        @Setting("minimum-idle")
+        val minimumIdle: Int = 1,
+
+        @Setting("connection-timeout-millis")
+        val connectionTimeoutMillis: Long = 10_000,
+
+        @Setting("validation-timeout-millis")
+        val validationTimeoutMillis: Long = 5_000,
+    )
+
+    @ConfigSerializable
+    data class ChatConfig(
+        @Setting("enforce-secure-profile")
+        @Comment(
+            """
+            Whether clients must present a signed chat session before they may chat.
+            When enabled, players without a Mojang-issued profile key (offline mode,
+            some proxies, Geyser) are told chat is disabled instead of being allowed
+            to send unsigned messages.
+            """
+        )
+        val enforceSecureProfile: Boolean = false,
+
+        @Setting("chat-spam-threshold-seconds")
+        @Comment(
+            """
+            Vanilla's chat-spam-threshold-seconds. Each chat message adds 20 to a
+            counter that drains by 1 per tick; exceeding 20 * this value disconnects
+            the player with "disconnect.spam".
+            """
+        )
+        val chatSpamThresholdSeconds: Int = 10,
+
+        @Setting("command-spam-threshold-seconds")
+        @Comment("Vanilla's command-spam-threshold-seconds. Same mechanism as above, for commands.")
+        val commandSpamThresholdSeconds: Int = 10,
+    )
+
+    @ConfigSerializable
+    data class PerformanceConfig(
+        @Setting("tick-threads")
+        @Comment(
+            """
+            Number of threads used to tick the world (chunks & entities).
+            Set to 0 to use the number of available CPU cores.
+            For large player counts a good starting point is the number of
+            physical cores.
+            An explicit -Dminestom.dispatcher-threads=<n> JVM flag overrides this.
+            """
+        )
+        val tickThreads: Int = 1,
+
+        @Setting("view-distance")
+        @Comment(
+            """
+            Chunk view distance in chunks. This is what the server tells the client on
+            join, so raising it here (instead of only on the instance) is what actually
+            makes far chunks render. Players still see at most their own render distance.
+            An explicit -Dminestom.chunk-view-distance=<n> JVM flag overrides this.
+            """
+        )
+        val viewDistance: Int = 8,
+
+        @Setting("spark")
+        val spark: SparkConfig = SparkConfig(),
+    )
+
+    @ConfigSerializable
+    data class SparkConfig(
+        @Setting("profile-on-startup")
+        @Comment(
+            """
+            Whether Spark should start profiling every thread as soon as the server boots.
+            Useful while tuning a server, but it keeps a sampler running for the whole uptime.
+            """
+        )
+        val profileOnStartup: Boolean = true,
+    )
+}

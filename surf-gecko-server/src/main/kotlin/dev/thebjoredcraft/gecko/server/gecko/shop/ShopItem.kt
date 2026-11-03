@@ -1,0 +1,67 @@
+package dev.thebjoredcraft.gecko.server.gecko.shop
+
+import dev.thebjoredcraft.gecko.server.gecko.map.GeckoMap
+import dev.thebjoredcraft.gecko.server.gecko.player.game.GeckoGameRole
+import dev.thebjoredcraft.gecko.server.gecko.shop.items.hider.*
+import dev.thebjoredcraft.gecko.server.gecko.shop.items.misc.MiscLightningShopItem
+import dev.thebjoredcraft.gecko.server.gecko.shop.items.potions.PotionInvisShopItem
+import dev.thebjoredcraft.gecko.server.gecko.shop.items.potions.PotionSpeedShopItem
+import dev.thebjoredcraft.gecko.server.gecko.shop.items.seeker.*
+import dev.thebjoredcraft.gecko.server.gecko.shop.type.ShopItemType
+import dev.thebjoredcraft.gecko.server.i18n.GeckoLanguage
+import dev.thebjoredcraft.gecko.server.i18n.LocalizedComponent
+import dev.thebjoredcraft.gecko.server.i18n.translatable
+import dev.thebjoredcraft.gecko.server.util.withTag
+import net.minestom.server.entity.Player
+import net.minestom.server.item.ItemStack
+import net.minestom.server.tag.Tag
+
+interface ShopItem {
+    val id: String
+    val price: Int
+    val displayName: LocalizedComponent get() = translatable("shop.item.$id.name")
+    val description: LocalizedComponent get() = translatable("shop.item.$id.description")
+
+    val item: ItemStack
+    fun inventoryItem(language: GeckoLanguage): ItemStack =
+        localize(item.builder().withTag(ID_TAG, id).build(), language)
+
+    fun localize(stack: ItemStack, language: GeckoLanguage): ItemStack = stack
+    val displayItem: ItemStack get() = item
+    val maps: List<GeckoMap>?
+    val roles: List<GeckoGameRole>
+    val types: List<ShopItemType>
+
+    fun onUse(player: Player): Boolean
+
+    fun availableOn(map: GeckoMap) = maps?.contains(map) != false
+
+    companion object {
+        val ID_TAG: Tag<String> = Tag.String("shop_item_id")
+
+        private val items by lazy {
+            listOf(
+                PotionInvisShopItem,
+                PotionSpeedShopItem,
+                MiscLightningShopItem,
+                SeekerHeartbeatKnifeShopItem,
+                SeekerSpyDeviceShopItem,
+                SeekerSonarShopItem,
+                SeekerLaserShopItem,
+                SeekerWebGrenadeShopItem,
+                SeekerCompassShopItem,
+                SeekerPowerBowShopItem,
+                SeekerHiderCostumeShopItem,
+                HiderSmokeBombShopItem,
+                HiderScoutShopItem,
+                HiderSpringShopItem,
+                HiderShieldShopItem,
+                HiderSeekerCostumeShopItem
+            )
+        }
+
+        fun byType(type: ShopItemType) = items.filter { it.types.contains(type) }
+        fun byRole(role: GeckoGameRole) = items.filter { it.roles.contains(role) }
+        fun byId(id: String) = items.find { it.id == id }
+    }
+}

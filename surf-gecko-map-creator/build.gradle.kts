@@ -2,10 +2,10 @@ plugins {
     id("dev.slne.surf.api.gradle.paper-plugin")
 }
 
-group = "dev.slne.surf.gecko.map.creator"
+group = "dev.thebjoredcraft.gecko.map.creator"
 
 surfPaperPluginApi {
-    mainClass("dev.slne.surf.gecko.map.creator.PaperMain")
+    mainClass("dev.thebjoredcraft.gecko.map.creator.PaperMain")
     generateLibraryLoader(false)
     foliaSupported(true)
 

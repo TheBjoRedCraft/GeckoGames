@@ -1,0 +1,21 @@
+package dev.thebjoredcraft.gecko.server.gecko.shop.effect.beam
+
+import dev.slne.surf.api.minestom.coroutine.ticks
+import dev.thebjoredcraft.gecko.server.gecko.shop.effect.GeckoEffect
+import net.minestom.server.coordinate.Point
+import net.minestom.server.entity.Player
+
+class BeamEffect(
+    private val viewers: Set<Player>,
+    origins: Collection<Point>,
+    beam: ParticleBeam
+) : GeckoEffect(8.ticks) {
+
+    private val packets = origins.flatMap(beam::packetsAt)
+
+    override fun isActive() = packets.isNotEmpty()
+    override fun start() = Unit
+
+    override fun pulse() = viewers.forEach { if (it.isOnline) it.sendPackets(packets) }
+    override fun stop() = Unit
+}

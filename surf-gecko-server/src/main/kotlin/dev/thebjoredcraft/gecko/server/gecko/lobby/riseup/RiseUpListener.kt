@@ -1,0 +1,42 @@
+package dev.thebjoredcraft.gecko.server.gecko.lobby.riseup
+
+import dev.slne.surf.api.minestom.permission.hasPermission
+import dev.thebjoredcraft.gecko.server.event.EventHandler
+import dev.thebjoredcraft.gecko.server.event.MinestomListener
+import dev.thebjoredcraft.gecko.server.gecko.lobby.GeckoLobby
+import dev.thebjoredcraft.gecko.server.gecko.sound.GeckoSounds
+import dev.thebjoredcraft.gecko.server.permission.PermissionList
+import net.kyori.adventure.sound.Sound
+import net.minestom.server.coordinate.Vec
+import net.minestom.server.entity.Player
+import net.minestom.server.event.entity.EntityAttackEvent
+
+object RiseUpListener : MinestomListener {
+    @EventHandler
+    fun onPunch(event: EntityAttackEvent) {
+        val source = event.entity as? Player ?: return
+        val target = event.target as? Player ?: return
+
+        if (!GeckoLobby.contains(source) || !GeckoLobby.contains(target)) {
+            return
+        }
+
+        if (target.uuid == source.uuid) {
+            return
+        }
+
+        if (!source.isSneaking) {
+            return
+        }
+
+        if (!source.hasPermission(PermissionList.RISEUP)) {
+            return
+        }
+
+        target.scheduleNextTick {
+            it.velocity = Vec(0.0, 18.0, 0.0)
+        }
+
+        source.playSound(GeckoSounds.LOBBY_RISEUP, Sound.Emitter.self())
+    }
+}

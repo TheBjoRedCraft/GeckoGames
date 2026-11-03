@@ -1,11 +1,11 @@
-package dev.slne.surf.gecko.map.creator.item
+package dev.thebjoredcraft.gecko.map.creator.item
 
 import dev.slne.surf.api.paper.builder.buildItem
 import dev.slne.surf.api.paper.builder.buildLore
 import dev.slne.surf.api.paper.builder.displayName
 import dev.slne.surf.api.paper.builder.meta
-import dev.slne.surf.gecko.map.creator.draft.GeckoPoiType
-import dev.slne.surf.gecko.map.creator.plugin
+import dev.thebjoredcraft.gecko.map.creator.draft.GeckoPoiType
+import dev.thebjoredcraft.gecko.map.creator.plugin
 import net.kyori.adventure.text.format.TextDecoration
 import org.bukkit.Material
 import org.bukkit.NamespacedKey
