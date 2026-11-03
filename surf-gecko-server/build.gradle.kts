@@ -96,5 +96,3 @@ afterEvaluate {
 tasks.build {
     dependsOn(tasks.shadowJar)
 }
-
-apply(from = rootProject.file("gradle/deploy-dev-gecko.gradle.kts"))
