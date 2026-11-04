@@ -5,17 +5,40 @@ import dev.thebjoredcraft.gecko.map.creator.draft.GeckoMapDraft
 import dev.thebjoredcraft.gecko.map.creator.draft.GeckoPoiType
 import java.time.OffsetDateTime
 import java.util.*
+import kotlin.collections.filter
+import kotlin.collections.isEmpty
+import kotlin.collections.iterator
+import kotlin.collections.joinToString
+import kotlin.text.appendLine
+import kotlin.text.buildString
+import kotlin.text.contains
+import kotlin.text.endsWith
+import kotlin.text.filter
+import kotlin.text.first
+import kotlin.text.format
+import kotlin.text.ifEmpty
+import kotlin.text.isDigit
+import kotlin.text.isEmpty
+import kotlin.text.isLetterOrDigit
+import kotlin.text.isNotBlank
+import kotlin.text.lowercase
+import kotlin.text.removeSuffix
+import kotlin.text.replace
+import kotlin.text.replaceFirstChar
+import kotlin.text.split
+import kotlin.text.trimEnd
+import kotlin.text.uppercaseChar
 
 object GeckoMapCodeGenerator {
     private const val BASE_PACKAGE = "dev.thebjoredcraft.gecko.server.gecko.map.maps"
     private const val SOURCE_ROOT = "surf-gecko-server/src/main/kotlin"
 
-    fun packageName(draft: GeckoMapDraft) = "$BASE_PACKAGE.${packageSegment(draft.mapName)}"
+    fun packageName(draft: GeckoMapDraft) = "${BASE_PACKAGE}.${packageSegment(draft.mapName)}"
 
     fun objectName(draft: GeckoMapDraft) = objectName(draft.mapName)
 
     fun filePath(draft: GeckoMapDraft) =
-        "$SOURCE_ROOT/${packageName(draft).replace('.', '/')}/${objectName(draft)}.kt"
+        "${SOURCE_ROOT}/${packageName(draft).replace('.', '/')}/${objectName(draft)}.kt"
 
     fun generate(draft: GeckoMapDraft, submittedAt: OffsetDateTime = OffsetDateTime.now()) =
         buildString {
