@@ -6,14 +6,11 @@ import dev.slne.surf.api.minestom.command.dsl.playerExecutor
 import dev.slne.surf.api.minestom.coroutine.minestomAsyncScope
 import dev.slne.surf.bitmap.common.head.composeHead
 import dev.slne.surf.bitmap.common.head.renderHead
-import dev.slne.surf.core.api.common.server.SurfServer
-import dev.thebjoredcraft.gecko.common.joinme.PublishJoinMeRedisEvent
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
 import dev.thebjoredcraft.gecko.server.i18n.GeckoLanguage
 import dev.thebjoredcraft.gecko.server.i18n.GeckoTranslations
 import dev.thebjoredcraft.gecko.server.i18n.sendTranslated
 import dev.thebjoredcraft.gecko.server.permission.PermissionList
-import dev.thebjoredcraft.gecko.server.redis.redisApi
 import kotlinx.coroutines.launch
 import net.kyori.adventure.text.Component
 
@@ -67,7 +64,7 @@ fun joinMeCommand() = commandTree("joinme") {
                             appendSpace()
                             white("📍")
                             appendSpace()
-                            spacer(SurfServer.current().displayName)
+                            //     spacer(SurfServer.current().displayName)
                         },
                         buildText {
                             appendSpace()
@@ -86,14 +83,14 @@ fun joinMeCommand() = commandTree("joinme") {
                 }
             }
 
-            redisApi.publishEvent(
-                PublishJoinMeRedisEvent(
-                    SurfServer.current(),
-                    playerName,
-                    game.internalId,
-                    messages
-                )
-            )
+//            redisApi.publishEvent(
+//                PublishJoinMeRedisEvent(
+//                    SurfServer.current(),
+//                    playerName,
+//                    game.internalId,
+//                    messages
+//                )
+//            )
 
             player.sendTranslated("joinme.sent")
         }
