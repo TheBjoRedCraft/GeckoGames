@@ -1,14 +1,14 @@
 package dev.thebjoredcraft.gecko.server.database.repository
 
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.core.SortOrder
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.core.count
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.core.eq
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.select
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import dev.thebjoredcraft.gecko.server.database.table.GeckoGameStatsTable
 import dev.thebjoredcraft.gecko.server.gecko.lobby.leaderbord.data.LeaderboardSummary
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
+import org.jetbrains.exposed.v1.core.SortOrder
+import org.jetbrains.exposed.v1.core.count
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.r2dbc.select
+import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 
 object GeckoLeaderboardRepository {
     suspend fun fetchWinTotals(): List<LeaderboardSummary> = suspendTransaction {

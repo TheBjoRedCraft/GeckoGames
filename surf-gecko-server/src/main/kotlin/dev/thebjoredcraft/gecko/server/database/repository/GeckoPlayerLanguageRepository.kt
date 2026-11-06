@@ -1,13 +1,13 @@
 package dev.thebjoredcraft.gecko.server.database.repository
 
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.core.eq
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.select
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.upsert
 import dev.thebjoredcraft.gecko.server.database.table.GeckoPlayerLanguagesTable
 import dev.thebjoredcraft.gecko.server.i18n.GeckoLanguage
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
+import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.r2dbc.select
+import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
+import org.jetbrains.exposed.v1.r2dbc.upsert
 import java.util.*
 
 object GeckoPlayerLanguageRepository {

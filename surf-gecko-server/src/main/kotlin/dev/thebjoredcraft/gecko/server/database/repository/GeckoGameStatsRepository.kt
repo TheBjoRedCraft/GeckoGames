@@ -1,9 +1,9 @@
 package dev.thebjoredcraft.gecko.server.database.repository
 
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.batchInsert
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import dev.thebjoredcraft.gecko.server.database.table.GeckoGameStatsTable
 import dev.thebjoredcraft.gecko.server.gecko.stats.GeckoGameStats
+import org.jetbrains.exposed.v1.r2dbc.batchInsert
+import org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 
 object GeckoGameStatsRepository {
     suspend fun insertStats(stats: Collection<GeckoGameStats>) {

@@ -1,9 +1,9 @@
 package dev.thebjoredcraft.gecko.server.database.table.events
 
-import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.core.dao.id.ULongIdTable
+import org.jetbrains.exposed.v1.core.dao.id.LongIdTable
 
-object GeckoEventDataTable : ULongIdTable("gecko_event_data") {
-    val eventId = ulong("event_id").references(GeckoEventsTable.id)
+object GeckoEventDataTable : LongIdTable("gecko_event_data") {
+    val eventId = long("event_id").references(GeckoEventsTable.id)
     val key = varchar("key", 255)
     val value = largeText("value")
 }

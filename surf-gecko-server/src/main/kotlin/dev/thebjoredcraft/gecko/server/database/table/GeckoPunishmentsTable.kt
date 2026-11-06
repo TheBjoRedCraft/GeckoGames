@@ -1,13 +1,13 @@
 package dev.thebjoredcraft.gecko.server.database.table
 
-import dev.slne.surf.database.columns.nativeUuid
-import dev.slne.surf.database.columns.time.offsetDateTime
-import dev.slne.surf.database.table.AuditableLongIdTable
+import dev.thebjoredcraft.railway.database.table.auditable.AuditableLongIdTable
+import dev.thebjoredcraft.railway.database.table.column.offsetDateTime
+import dev.thebjoredcraft.railway.database.table.column.stringUuid
 
 object GeckoPunishmentsTable : AuditableLongIdTable("gecko_punishments") {
-    val playerUuid = nativeUuid("player_uuid")
+    val playerUuid = stringUuid("player_uuid")
     val expiresAt = offsetDateTime("expires_at").nullable()
     val unpunished = bool("unpunished").default(false)
-    val punisherUuid = nativeUuid("punisher_uuid").nullable()
+    val punisherUuid = stringUuid("punisher_uuid").nullable()
     val reason = varchar("reason", 255)
 }
