@@ -1,18 +1,22 @@
 package dev.thebjoredcraft.gecko.server.database
 
-import dev.slne.surf.database.DatabaseApi
+import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.R2dbcDatabase
 import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.SchemaUtils
 import dev.slne.surf.database.libs.org.jetbrains.exposed.v1.r2dbc.transactions.suspendTransaction
 import dev.thebjoredcraft.gecko.server.database.table.*
 import dev.thebjoredcraft.gecko.server.database.table.events.GeckoEventDataTable
 import dev.thebjoredcraft.gecko.server.database.table.events.GeckoEventsTable
-import kotlin.io.path.Path
 
 object GeckoDatabaseManager {
-    private lateinit var databaseApi: DatabaseApi
+    private lateinit var database: R2dbcDatabase
 
     suspend fun create() {
-        databaseApi = DatabaseApi.create(Path("."))
+        database = R2dbcDatabase.connect {
+            connectionFactoryOptions {
+
+            }
+        }
+
 
         suspendTransaction {
             SchemaUtils.create(

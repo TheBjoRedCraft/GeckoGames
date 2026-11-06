@@ -5,6 +5,7 @@ plugins {
 repositories {
     maven("https://reposilite.slne.dev/releases") { name = "slne-repository-releases" }
     maven("https://reposilite.atlasengine.ca/public") { name = "atlasengine-repository-public" }
+    maven("https://jitpack.io")
 }
 
 surfMinestomServerApi {
@@ -39,6 +40,7 @@ dependencies {
     annotationProcessor(libs.fabric.mixin)
     implementation(libs.mixin.extra)
     annotationProcessor(libs.mixin.extra)
+    implementation("com.github.TheBjoRedCraft:railway:1.0.0")
 }
 
 val bundleTranslations by tasks.registering {
