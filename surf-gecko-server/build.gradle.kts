@@ -1,5 +1,6 @@
 plugins {
     id("dev.slne.surf.api.gradle.minestom-server")
+    id("xyz.jpenilla.gremlin-gradle")
 }
 
 repositories {
@@ -28,9 +29,9 @@ dependencies {
     implementation(projects.surfGeckoCommon)
 
     compileOnly(libs.surf.bitmap.provider.common)
-    implementation(libs.surf.database.r2dbc) {
-        artifact { classifier = "all" }
-    }
+
+    implementation("xyz.jpenilla:gremlin-runtime:0.0.9")
+    runtimeDownload("com.github.TheBjoRedCraft:railway:1.0.2")
 
     implementation(libs.adventure.text.minimessage)
     implementation(libs.wsee)
@@ -40,7 +41,12 @@ dependencies {
     annotationProcessor(libs.fabric.mixin)
     implementation(libs.mixin.extra)
     annotationProcessor(libs.mixin.extra)
-    implementation("com.github.TheBjoRedCraft:railway:1.0.0")
+}
+
+configurations {
+    compileOnly {
+        extendsFrom(configurations.runtimeDownload.get())
+    }
 }
 
 val bundleTranslations by tasks.registering {

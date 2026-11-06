@@ -47,6 +47,8 @@ object GeckoBootstrap {
 
         bootstrapLogger.info("Booting server...")
 
+        GremlinRuntimeDownloader.resolve()
+
         val config = ConfigLoader(Path("config.yml")).load()
 
         config.applyTickDispatcherThreads()
