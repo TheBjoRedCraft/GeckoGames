@@ -22,7 +22,7 @@ sealed interface GeckoEvent {
 
     data class JoinMe(
         val senderUuid: UUID,
-        val gameId: ULong
+        val gameId: Long
     ) : GeckoEvent {
         override val type = Type.JOIN_ME
         override fun mapData() = mapOf(

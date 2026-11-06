@@ -1,7 +1,7 @@
 package dev.thebjoredcraft.gecko.common.game
 
 data class GeckoGameInfo(
-    val gameId: ULong,
+    val gameId: Long,
     val currentPlayers: Int,
     val maxPlayers: Int,
     val mapDisplayName: String,

@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.time.Duration
 
 object GeckoScoreboardManager {
-    private val sidebars = ConcurrentHashMap<ULong, ConcurrentHashMap<GeckoLanguage, Sidebar>>()
+    private val sidebars = ConcurrentHashMap<Long, ConcurrentHashMap<GeckoLanguage, Sidebar>>()
 
     init {
         PlayerLanguages.onChange { player ->

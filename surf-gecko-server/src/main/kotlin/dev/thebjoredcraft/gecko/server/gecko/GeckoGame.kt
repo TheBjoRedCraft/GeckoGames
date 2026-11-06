@@ -47,7 +47,7 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.toKotlinDuration
 
 class GeckoGame(
-    val internalId: ULong,
+    val internalId: Long,
     val settings: GeckoGameSettings,
     val instance: Instance
 ) {

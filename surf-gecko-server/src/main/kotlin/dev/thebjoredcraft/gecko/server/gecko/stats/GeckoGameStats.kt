@@ -4,7 +4,7 @@ import java.util.*
 
 data class GeckoGameStats(
     val playerUuid: UUID,
-    val gameId: ULong,
+    val gameId: Long,
     val seeker: Boolean,
     val finalSeeker: Boolean,
     val win: Boolean,

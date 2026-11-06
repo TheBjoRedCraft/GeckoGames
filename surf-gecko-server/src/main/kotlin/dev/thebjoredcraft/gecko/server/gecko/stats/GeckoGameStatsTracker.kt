@@ -56,7 +56,7 @@ class GeckoGameStatsTracker {
         synchronized(entry) { entry.left = true }
     }
 
-    fun collect(gameId: ULong, endReason: GeckoGameEndReason) = entries.map { (playerUuid, entry) ->
+    fun collect(gameId: Long, endReason: GeckoGameEndReason) = entries.map { (playerUuid, entry) ->
         synchronized(entry) {
             GeckoGameStats(
                 playerUuid = playerUuid,

@@ -175,7 +175,7 @@ object GeckoGameManager {
         GeckoGameRepository.updateGameEndReason(game, reason)
     }
 
-    fun findGame(gameId: ULong) = synchronized(lock) {
+    fun findGame(gameId: Long) = synchronized(lock) {
         games.firstOrNull { it.internalId == gameId }
     }
 

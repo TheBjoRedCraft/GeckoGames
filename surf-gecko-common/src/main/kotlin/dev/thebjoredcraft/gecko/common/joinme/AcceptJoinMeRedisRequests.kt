@@ -10,12 +10,12 @@ import kotlinx.serialization.Serializable
 data class AcceptJoinMeRedisRequest(
     val server: SurfServer,
     val whoWillJoin: SerializableUUID,
-    val gameId: ULong
+    val gameId: Long
 ) : RedisRequest()
 
 @Serializable
 data class AcceptJoinMeRedisResponse(
-    val gameId: ULong,
+    val gameId: Long,
     val result: Result
 ) : RedisResponse() {
     enum class Result {

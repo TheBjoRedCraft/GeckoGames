@@ -5,13 +5,13 @@ import dev.slne.surf.core.api.common.server.SurfServer
 import dev.slne.surf.redis.event.RedisEvent
 import kotlinx.serialization.Serializable
 import net.kyori.adventure.text.Component
-import java.util.Locale
+import java.util.*
 
 @Serializable
 data class PublishJoinMeRedisEvent(
     val geckoServer: SurfServer,
     val whoIsPlaying: SerializableComponent,
-    val gameId: ULong,
+    val gameId: Long,
     val messages: Map<String, SerializableComponent>
 ) : RedisEvent() {
     fun message(locale: Locale?): Component {

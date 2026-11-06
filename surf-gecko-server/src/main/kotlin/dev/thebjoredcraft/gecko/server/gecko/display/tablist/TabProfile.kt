@@ -9,7 +9,7 @@ class TabProfile(
     val player: Player,
     val language: GeckoLanguage,
     val group: SocialGroup,
-    val gameId: ULong?,
+    val gameId: Long?,
     val rankedName: Component,
     val rankOrder: Int,
     val roleName: Map<GeckoLanguage, Component>?,
