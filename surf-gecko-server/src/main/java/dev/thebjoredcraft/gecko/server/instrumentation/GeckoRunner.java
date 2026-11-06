@@ -1,16 +1,22 @@
 package dev.thebjoredcraft.gecko.server.instrumentation;
 
-import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+import dev.slne.surf.api.minestom.server.impl.mixin.SurfMixinAgent;
 import dev.thebjoredcraft.gecko.server.instrumentation.mixin.InstrumentationMixinService;
+import java.io.IOException;
 import java.lang.instrument.Instrumentation;
+import java.net.URI;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.jar.JarFile;
 import me.lucko.luckperms.minestom.dependencies.LuckPermsAgent;
 import org.jspecify.annotations.NullMarked;
-import org.spongepowered.asm.launch.MixinBootstrap;
-import org.spongepowered.asm.mixin.MixinEnvironment;
-import org.spongepowered.asm.mixin.Mixins;
 
 @NullMarked
 public final class GeckoRunner {
+
+  private static final String SURF_MIXIN_CONFIGS_ATTRIBUTE = "Surf-Mixin-Configs";
 
   private GeckoRunner() {
   }
@@ -19,10 +25,12 @@ public final class GeckoRunner {
     try {
       GeckoInstrumentation.setInstrumentation(instrumentation);
       InstrumentationMixinService.setInstrumentation(instrumentation);
-      MixinBootstrap.init();
-      MixinExtrasBootstrap.init();
-      Mixins.addConfiguration("mixins.surf-gecko.json");
-      advanceMixinPhases();
+
+      List<String> configs = new ArrayList<>(surfMixinConfigs());
+      configs.addAll(SurfMixinAgent.compatibilityConfigs());
+      configs.add("mixins.surf-gecko.json");
+
+      SurfMixinAgent.install(instrumentation, configs);
 
       LuckPermsAgent.agentmain(agentArgs, instrumentation);
     } catch (Throwable e) {
@@ -31,19 +39,21 @@ public final class GeckoRunner {
     }
   }
 
-  private static void advanceMixinPhases() {
-    try {
-      var gotoPhase = MixinEnvironment.class.getDeclaredMethod(
-          "gotoPhase",
-          MixinEnvironment.Phase.class
-      );
+  private static List<String> surfMixinConfigs() throws IOException, java.net.URISyntaxException {
+    URI location = GeckoRunner.class.getProtectionDomain().getCodeSource().getLocation().toURI();
+    Path jarPath = Path.of(location);
 
-      gotoPhase.setAccessible(true);
+    try (JarFile jar = new JarFile(jarPath.toFile())) {
+      String attribute = jar.getManifest().getMainAttributes().getValue(SURF_MIXIN_CONFIGS_ATTRIBUTE);
 
-      gotoPhase.invoke(null, MixinEnvironment.Phase.INIT);
-      gotoPhase.invoke(null, MixinEnvironment.Phase.DEFAULT);
-    } catch (ReflectiveOperationException e) {
-      throw new RuntimeException("Failed to advance Mixin phases", e);
+      if (attribute == null || attribute.isBlank()) {
+        return List.of();
+      }
+
+      return Arrays.stream(attribute.split(","))
+          .map(String::trim)
+          .filter(s -> !s.isEmpty())
+          .toList();
     }
   }
 }

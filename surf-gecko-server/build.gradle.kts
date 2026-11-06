@@ -21,7 +21,6 @@ surfMinestomServerApi {
 
     pluginDependencies {
         register("surf-bitmap-provider-minestom")
-        register("surf-redis-minestom")
     }
 }
 
