@@ -3,7 +3,7 @@ FROM gradle:9.8.2-jdk25-alpine AS build
 WORKDIR /build
 
 COPY . .
-RUN gradle :surf-gecko-server:shadowJar -q
+RUN gradle :surf-gecko-server:shadowJar
 FROM eclipse-temurin:25-jre-alpine AS runtime
 WORKDIR /server
 
