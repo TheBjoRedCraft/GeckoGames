@@ -4,7 +4,7 @@ WORKDIR /build
 
 COPY . .
 RUN gradle :surf-gecko-server:shadowJar --no-daemon -q
-FROM eclipse-temurin:21-jre-alpine AS runtime
+FROM eclipse-temurin:25-jre-alpine AS runtime
 WORKDIR /server
 
 COPY --from=build /build/surf-gecko-server/build/libs/surf-gecko-server.jar server.jar
