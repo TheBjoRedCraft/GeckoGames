@@ -2,7 +2,6 @@ package dev.thebjoredcraft.gecko.server.i18n
 
 import dev.slne.surf.api.core.font.toSmallCaps
 import dev.slne.surf.api.core.messages.Colors
-import dev.slne.surf.bitmap.common.provider.BitmapProvider
 import dev.thebjoredcraft.gecko.server.gecko.player.game.COLOR_HIDER
 import dev.thebjoredcraft.gecko.server.gecko.player.game.COLOR_SEEKER
 import dev.thebjoredcraft.gecko.server.gecko.player.game.COLOR_SPECTATOR
@@ -10,6 +9,7 @@ import dev.thebjoredcraft.gecko.server.gecko.util.GECKO_HIGHLIGHT
 import dev.thebjoredcraft.gecko.server.gecko.util.GECKO_PRIMARY
 import dev.thebjoredcraft.gecko.server.gecko.util.GECKO_SECONDARY
 import dev.thebjoredcraft.gecko.server.gecko.util.GECKO_USELESS
+import dev.thebjoredcraft.gecko.server.resourcepack.bitmap.GeckoBitmaps
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextComponent
 import net.kyori.adventure.text.format.TextColor
@@ -18,7 +18,7 @@ import net.kyori.adventure.text.minimessage.tag.Tag
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver
 
 object GeckoTags {
-    private val gecko = BitmapProvider.translateToComponent("Gecko", Colors.WHITE, GECKO_PRIMARY)
+    private val gecko = GeckoBitmaps.text("Gecko", Colors.WHITE, GECKO_PRIMARY)
         .append(Component.space())
 
     private val smallCaps = Modifying { current, _ ->

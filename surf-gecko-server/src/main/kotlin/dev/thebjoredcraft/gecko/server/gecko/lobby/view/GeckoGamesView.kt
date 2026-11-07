@@ -8,13 +8,13 @@ import dev.slne.surf.api.minestom.inventory.framework.view.icon.ViewIconColor
 import dev.slne.surf.api.minestom.inventory.framework.view.icon.ViewIconType
 import dev.slne.surf.api.minestom.inventory.framework.view.pagination.pagination
 import dev.slne.surf.api.minestom.inventory.framework.view.settings.PaginationViewRows
-import dev.slne.surf.bitmap.common.provider.BitmapProvider
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGame
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
 import dev.thebjoredcraft.gecko.server.gecko.state.GeckoGameState
 import dev.thebjoredcraft.gecko.server.i18n.sendTranslated
 import dev.thebjoredcraft.gecko.server.i18n.translate
 import dev.thebjoredcraft.gecko.server.i18n.translatePlain
+import dev.thebjoredcraft.gecko.server.resourcepack.bitmap.GeckoBitmaps
 import net.kyori.adventure.text.Component
 import net.minestom.server.entity.Player
 
@@ -90,7 +90,7 @@ private fun itemForGame(player: Player, geckoGame: GeckoGame) =
     }
 
 private fun heading(player: Player, key: String) =
-    BitmapProvider.translateToComponent(player.translatePlain(key), Colors.WHITE, Colors.INFO)
+    GeckoBitmaps.text(player.translatePlain(key), Colors.WHITE, Colors.INFO)
 
 private fun stateColor(geckoGame: GeckoGame) = if (geckoGame.joinable) {
     ViewIconColor.GREEN

@@ -3,7 +3,6 @@ package dev.thebjoredcraft.gecko.server.gecko.display.tablist
 import dev.slne.surf.api.core.messages.Colors
 import dev.slne.surf.api.core.messages.adventure.buildText
 import dev.slne.surf.api.core.minimessage.miniMessage
-import dev.slne.surf.bitmap.common.provider.BitmapProvider
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
 import dev.thebjoredcraft.gecko.server.gecko.social.SocialGroup
 import dev.thebjoredcraft.gecko.server.gecko.social.SocialGroupManager
@@ -12,6 +11,7 @@ import dev.thebjoredcraft.gecko.server.i18n.GeckoTranslations
 import dev.thebjoredcraft.gecko.server.i18n.PlayerLanguages
 import dev.thebjoredcraft.gecko.server.i18n.language
 import dev.thebjoredcraft.gecko.server.luckperms.LuckPermsAccess
+import dev.thebjoredcraft.gecko.server.resourcepack.bitmap.GeckoBitmaps
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
@@ -129,7 +129,7 @@ object GeckoTablistRenderer {
                 GeckoLanguage.entries.associateWith { language ->
                     buildText {
                         append(
-                            BitmapProvider.translateToComponent(
+                            GeckoBitmaps.text(
                                 GeckoTranslations.renderPlain(language, "role.${it.id}.name"),
                                 Colors.WHITE,
                                 it.color,

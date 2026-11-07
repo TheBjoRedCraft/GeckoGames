@@ -2,7 +2,7 @@ package dev.thebjoredcraft.gecko.server.gecko.util
 
 import dev.slne.surf.api.core.messages.Colors
 import dev.slne.surf.api.core.messages.builder.SurfComponentBuilder
-import dev.slne.surf.bitmap.common.provider.BitmapProvider
+import dev.thebjoredcraft.gecko.server.resourcepack.bitmap.GeckoBitmaps
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
@@ -13,7 +13,7 @@ val GECKO_HIGHLIGHT = TextColor.fromHexString("#FCC500")!!
 val GECKO_USELESS = TextColor.fromHexString("#DBEBE2")!!
 
 fun SurfComponentBuilder.appendPrefix() = append {
-    append(BitmapProvider.translateToComponent("Gecko", Colors.WHITE, GECKO_PRIMARY))
+    append(GeckoBitmaps.text("Gecko", Colors.WHITE, GECKO_PRIMARY))
     appendSpace()
     //    spacer("»")
     //    appendSpace()
