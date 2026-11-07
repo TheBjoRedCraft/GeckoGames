@@ -168,9 +168,15 @@ data class Config(
         val port: Int = 8080,
 
         @Setting("bind-address")
-        val bindAddress: String = "",
+        val bindAddress: String = "127.0.0.1",
+
+        @Setting("public-url")
+        @Comment("Public URL from which clients download the resource pack. Defaults to http://bindAddress:port/resourcepack.zip")
+        val publicUrl: String = "",
 
         @Setting("pack-location")
         val packLocation: String = "resourcepack.zip"
-    )
+    ) {
+        fun resourcePackUrl() = publicUrl.ifEmpty { "http://$bindAddress:$port/resourcepack.zip" }
+    }
 }

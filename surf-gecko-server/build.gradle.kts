@@ -25,7 +25,7 @@ dependencies {
     implementation(projects.surfGeckoCommon)
 
     implementation("xyz.jpenilla:gremlin-runtime:0.0.9")
-    runtimeDownload("com.github.TheBjoRedCraft:railway:1.0.5")
+    runtimeDownload("com.github.TheBjoRedCraft:railway:1.0.7")
 
     runtimeDownload(libs.adventure.text.minimessage)
     runtimeDownload(libs.wsee)

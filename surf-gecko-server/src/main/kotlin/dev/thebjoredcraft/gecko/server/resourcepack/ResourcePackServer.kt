@@ -54,7 +54,7 @@ object ResourcePackServer {
 
                     call.respond(LocalFileContent(packFile, ContentType.Application.Zip))
                 }
-                
+
                 get("/sha1") {
                     if (!packFile.exists() || !packFile.isFile) {
                         call.respondText(
@@ -76,6 +76,13 @@ object ResourcePackServer {
     fun stop() {
         server?.stop(gracePeriodMillis = 500, timeoutMillis = 2000)
         server = null
+    }
+
+    suspend fun sha1(): String {
+        val packFile = GeckoBootstrap.config.packServer.packLocation.let { path ->
+            Path(".").resolve(path)
+        }.toFile()
+        return sha1(packFile)
     }
 
     private suspend fun sha1(packFile: File): String = hashLock.withLock {

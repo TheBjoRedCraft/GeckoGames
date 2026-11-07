@@ -32,6 +32,7 @@ import dev.thebjoredcraft.gecko.server.performance.EntityTickFilter
 import dev.thebjoredcraft.gecko.server.performance.monitor.StatusBarService
 import dev.thebjoredcraft.gecko.server.player.LoadLanguageTask
 import dev.thebjoredcraft.gecko.server.player.PlayerConnectionService
+import dev.thebjoredcraft.gecko.server.resourcepack.ResourcePackConfigurationTask
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger
 import net.minestom.server.MinecraftServer
@@ -98,6 +99,10 @@ object GeckoBootstrap {
 
             withConfigurationPhase {
                 after(ConfigurationTasks.AWAIT_SETTINGS, LoadLanguageTask.ID, LoadLanguageTask)
+                before(
+                    ConfigurationTasks.RESOURCE_PACK, ResourcePackConfigurationTask.ID,
+                    ResourcePackConfigurationTask
+                )
             }
 
             withLuckPerms()
