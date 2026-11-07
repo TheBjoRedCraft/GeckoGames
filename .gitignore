@@ -47,3 +47,6 @@ bin/
 
 # local deploy credentials
 .env
+
+
+**/surf-gecko-resourcepack/**
