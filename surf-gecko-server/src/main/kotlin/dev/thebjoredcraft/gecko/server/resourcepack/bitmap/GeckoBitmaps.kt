@@ -22,48 +22,52 @@ object GeckoBitmaps {
     private const val N256 = '\uE109'
     private const val N512 = '\uE110'
 
-    private data class Glyph(val char: Char, val width: Int)
+    private val CHAR_MAP: Map<Char, GeckoGlyph> = buildMap {
+        for (i in 0 until 26) put(
+            ('a'.code + i).toChar(),
+            GeckoGlyph(('\uA411'.code + i).toChar(), 6)
+        )
+        for (i in 0 until 10) put(
+            ('0'.code + i).toChar(),
+            GeckoGlyph(('\uA42F'.code + i).toChar(), 6)
+        )
 
-    private val CHAR_MAP: Map<Char, Glyph> = buildMap {
-        for (i in 0 until 26) put(('a'.code + i).toChar(), Glyph(('\uA411'.code + i).toChar(), 6))
-        for (i in 0 until 10) put(('0'.code + i).toChar(), Glyph(('\uA42F'.code + i).toChar(), 6))
+        put('+', GeckoGlyph('\uA42B', 6))
+        put('-', GeckoGlyph('\uA42C', 6))
+        put('/', GeckoGlyph('\uA42D', 6))
+        put('\\', GeckoGlyph('\uA42E', 6))
+        put('_', GeckoGlyph('\uA439', 6))
+        put('%', GeckoGlyph('\uA43A', 6))
+        put('=', GeckoGlyph('\uA43B', 6))
+        put('#', GeckoGlyph('\uA43C', 6))
+        put('*', GeckoGlyph('\uA43D', 6))
 
-        put('+', Glyph('\uA42B', 6))
-        put('-', Glyph('\uA42C', 6))
-        put('/', Glyph('\uA42D', 6))
-        put('\\', Glyph('\uA42E', 6))
-        put('_', Glyph('\uA439', 6))
-        put('%', Glyph('\uA43A', 6))
-        put('=', Glyph('\uA43B', 6))
-        put('#', Glyph('\uA43C', 6))
-        put('*', Glyph('\uA43D', 6))
-
-        put('\u00B4', Glyph('\uA442', 7))  // ´ acute accent
-        put('&', Glyph('\uA443', 7))
-        put(')', Glyph('\uA444', 6))
-        put('(', Glyph('\uA445', 6))
-        put('^', Glyph('\uA446', 6))
-        put(':', Glyph('\uA447', 6))
-        put(',', Glyph('\uA449', 6))
-        put('{', Glyph('\uA44A', 6))
-        put('}', Glyph('\uA44B', 6))
-        put('\u00B0', Glyph('\uA44C', 6))  // ° degree
-        put('$', Glyph('\uA44D', 8))
-        put('.', Glyph('\uA454', 6))
-        put('"', Glyph('\uA455', 6))
-        put('\u20AC', Glyph('\uA456', 9))  // € euro
-        put('!', Glyph('\uA457', 6))
-        put('`', Glyph('\uA458', 6))
-        put('>', Glyph('\uA459', 6))
-        put('<', Glyph('\uA45B', 6))
-        put('|', Glyph('\uA45C', 6))
-        put('?', Glyph('\uA45D', 6))
-        put('\u00A7', Glyph('\uA45E', 8))  // § section
-        put(';', Glyph('\uA45F', 6))
-        put('\'', Glyph('\uA460', 6))
-        put(']', Glyph('\uA461', 6))
-        put('[', Glyph('\uA462', 6))
-        put('~', Glyph('\uA463', 6))
+        put('\u00B4', GeckoGlyph('\uA442', 7))  // ´ acute accent
+        put('&', GeckoGlyph('\uA443', 7))
+        put(')', GeckoGlyph('\uA444', 6))
+        put('(', GeckoGlyph('\uA445', 6))
+        put('^', GeckoGlyph('\uA446', 6))
+        put(':', GeckoGlyph('\uA447', 6))
+        put(',', GeckoGlyph('\uA449', 6))
+        put('{', GeckoGlyph('\uA44A', 6))
+        put('}', GeckoGlyph('\uA44B', 6))
+        put('\u00B0', GeckoGlyph('\uA44C', 6))  // ° degree
+        put('$', GeckoGlyph('\uA44D', 8))
+        put('.', GeckoGlyph('\uA454', 6))
+        put('"', GeckoGlyph('\uA455', 6))
+        put('\u20AC', GeckoGlyph('\uA456', 9))  // € euro
+        put('!', GeckoGlyph('\uA457', 6))
+        put('`', GeckoGlyph('\uA458', 6))
+        put('>', GeckoGlyph('\uA459', 6))
+        put('<', GeckoGlyph('\uA45B', 6))
+        put('|', GeckoGlyph('\uA45C', 6))
+        put('?', GeckoGlyph('\uA45D', 6))
+        put('\u00A7', GeckoGlyph('\uA45E', 8))  // § section
+        put(';', GeckoGlyph('\uA45F', 6))
+        put('\'', GeckoGlyph('\uA460', 6))
+        put(']', GeckoGlyph('\uA461', 6))
+        put('[', GeckoGlyph('\uA462', 6))
+        put('~', GeckoGlyph('\uA463', 6))
     }
 
     fun text(
@@ -110,7 +114,7 @@ object GeckoBitmaps {
     @Suppress("UNUSED_VALUE")
     private fun negativeSpacing(amount: Int): String {
         var remaining = amount.absoluteValue
-        
+
         return buildString {
             if (remaining >= 512) {
                 append(N512); remaining -= 512
