@@ -41,6 +41,7 @@ import kotlin.io.path.Path
 val bootstrapLogger: ComponentLogger = ComponentLogger.logger("GeckoBootstrap")
 
 object GeckoBootstrap {
+    lateinit var config: Config
 
     fun boot() {
         val startupStartedAt = System.nanoTime()
@@ -50,6 +51,8 @@ object GeckoBootstrap {
         GremlinRuntimeDownloader.resolve()
 
         val config = ConfigLoader(Path("config.yml")).load()
+
+        GeckoBootstrap.config = config
 
         config.applyTickDispatcherThreads()
         config.applyChunkViewDistance()

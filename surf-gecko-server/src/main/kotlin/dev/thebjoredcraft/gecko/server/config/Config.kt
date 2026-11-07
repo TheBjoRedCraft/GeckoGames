@@ -19,6 +19,9 @@ data class Config(
     @Setting("chat")
     val chat: ChatConfig = ChatConfig(),
 
+    @Setting("pack-server")
+    val packServer: PackServerConfig = PackServerConfig(),
+
     @Setting("translations")
     val translations: TranslationsConfig = TranslationsConfig(),
 
@@ -153,5 +156,21 @@ data class Config(
             """
         )
         val profileOnStartup: Boolean = true,
+    )
+
+
+    @ConfigSerializable
+    data class PackServerConfig(
+        @Setting("enabled")
+        val enabled: Boolean = true,
+
+        @Setting("port")
+        val port: Int = 8080,
+
+        @Setting("bind-address")
+        val bindAddress: String = "",
+
+        @Setting("pack-location")
+        val packLocation: String = "resourcepack.zip"
     )
 }

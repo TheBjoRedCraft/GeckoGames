@@ -1,6 +1,7 @@
 plugins {
     id("dev.slne.surf.api.gradle.minestom-server")
     id("xyz.jpenilla.gremlin-gradle")
+    id("io.ktor.plugin") version "3.0.1"
 }
 
 repositories {
@@ -32,14 +33,18 @@ dependencies {
     implementation("xyz.jpenilla:gremlin-runtime:0.0.9")
     runtimeDownload("com.github.TheBjoRedCraft:railway:1.0.4")
 
-    implementation(libs.adventure.text.minimessage)
-    implementation(libs.wsee)
+    runtimeDownload(libs.adventure.text.minimessage)
+    runtimeDownload(libs.wsee)
     compileOnly(libs.flare.fastutil)
 
-    implementation(libs.fabric.mixin)
+    runtimeDownload(libs.fabric.mixin)
     annotationProcessor(libs.fabric.mixin)
-    implementation(libs.mixin.extra)
+    runtimeDownload(libs.mixin.extra)
     annotationProcessor(libs.mixin.extra)
+
+    runtimeDownload("io.ktor:ktor-server-core")
+    runtimeDownload("io.ktor:ktor-server-netty")
+    runtimeDownload("io.ktor:ktor-server-auto-head-response")
 }
 
 configurations {

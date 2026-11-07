@@ -3,6 +3,7 @@ package dev.thebjoredcraft.gecko.server
 import dev.thebjoredcraft.gecko.server.config.Config
 import dev.thebjoredcraft.gecko.server.gecko.GeckoInstance
 import dev.thebjoredcraft.gecko.server.performance.monitor.StatusBarService
+import dev.thebjoredcraft.gecko.server.resourcepack.ResourcePackServer
 import kotlinx.coroutines.runBlocking
 import net.minestom.server.MinecraftServer
 import net.minestom.server.MinecraftServer.LOGGER
@@ -34,6 +35,7 @@ object GeckoServer {
 
             //RedisService.connect()
             GeckoInstance.enable()
+            ResourcePackServer.start()
 
             val startupDuration =
                 (System.nanoTime() - startupStartedAt).nanoseconds.inWholeMilliseconds.milliseconds
@@ -95,6 +97,7 @@ object GeckoServer {
 
         try {
             GeckoInstance.shutdown()
+            ResourcePackServer.stop()
         } catch (currentFailure: Throwable) {
             LOGGER.error("Failed to stop the gecko games.", currentFailure)
             failure = currentFailure
