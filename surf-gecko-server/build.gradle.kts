@@ -19,16 +19,10 @@ surfMinestomServerApi {
     withNpcLib()
     withConsole()
     withPlugins()
-
-    pluginDependencies {
-        register("surf-bitmap-provider-minestom")
-    }
 }
 
 dependencies {
     implementation(projects.surfGeckoCommon)
-
-    compileOnly(libs.surf.bitmap.provider.common)
 
     implementation("xyz.jpenilla:gremlin-runtime:0.0.9")
     runtimeDownload("com.github.TheBjoRedCraft:railway:1.0.5")
