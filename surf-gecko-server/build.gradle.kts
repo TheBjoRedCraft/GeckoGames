@@ -83,7 +83,8 @@ tasks.jar {
 
 afterEvaluate {
     tasks.shadowJar {
-        archiveClassifier = ""
+        dependsOn(zipResourcepack)
+        archiveFileName = "gecko-server.jar"
         isZip64 = true
 
         manifest {
@@ -98,6 +99,12 @@ afterEvaluate {
             )
         }
     }
+}
+
+val zipResourcepack by tasks.registering(Zip::class) {
+    from(rootProject.layout.projectDirectory.dir("surf-gecko-resourcepack"))
+    archiveFileName = "resourcepack.zip"
+    destinationDirectory = layout.buildDirectory.dir("libs")
 }
 
 tasks.build {
