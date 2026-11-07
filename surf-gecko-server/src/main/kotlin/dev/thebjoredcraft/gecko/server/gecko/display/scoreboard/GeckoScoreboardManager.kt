@@ -1,7 +1,7 @@
 package dev.thebjoredcraft.gecko.server.gecko.display.scoreboard
 
 import dev.slne.surf.api.core.messages.Colors
-import dev.slne.surf.bitmap.common.provider.BitmapProvider
+import dev.thebjoredcraft.gecko.server.resourcepack.bitmap.GeckoBitmaps
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGame
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
 import dev.thebjoredcraft.gecko.server.gecko.player.game.GeckoGameRole
@@ -167,7 +167,7 @@ object GeckoScoreboardManager {
     }
 
     private fun heading(language: GeckoLanguage, key: String) =
-        BitmapProvider.translateToComponent(
+        GeckoBitmaps.text(
             GeckoTranslations.renderPlain(language, key),
             Colors.WHITE,
             Colors.INFO
@@ -177,7 +177,7 @@ object GeckoScoreboardManager {
         GeckoTranslations.render(language, "display.scoreboard.time", "time" to time)
 
     private fun roleCount(game: GeckoGame, role: GeckoGameRole) =
-        BitmapProvider.translateToComponent(
+        GeckoBitmaps.text(
             game.gamePlayers.count { it.role == role }.toString().padStart(2, '0'),
             Colors.WHITE,
             role.color,
