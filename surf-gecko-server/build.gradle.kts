@@ -31,7 +31,7 @@ dependencies {
     compileOnly(libs.surf.bitmap.provider.common)
 
     implementation("xyz.jpenilla:gremlin-runtime:0.0.9")
-    runtimeDownload("com.github.TheBjoRedCraft:railway:1.0.4")
+    runtimeDownload("com.github.TheBjoRedCraft:railway:1.0.5")
 
     runtimeDownload(libs.adventure.text.minimessage)
     runtimeDownload(libs.wsee)
