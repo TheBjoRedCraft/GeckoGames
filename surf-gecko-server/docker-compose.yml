@@ -5,6 +5,7 @@ services:
       dockerfile: surf-gecko-server/Dockerfile
     ports:
       - "25565:25565"
+      - "8080:8080"
     volumes:
       - gecko-data:/server/data
     environment:
