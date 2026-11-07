@@ -54,6 +54,7 @@ object ResourcePackServer {
 
                     call.respond(LocalFileContent(packFile, ContentType.Application.Zip))
                 }
+                
                 get("/sha1") {
                     if (!packFile.exists() || !packFile.isFile) {
                         call.respondText(
