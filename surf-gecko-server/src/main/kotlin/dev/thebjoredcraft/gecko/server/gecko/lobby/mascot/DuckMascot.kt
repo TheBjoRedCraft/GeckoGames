@@ -1,5 +1,6 @@
 package dev.thebjoredcraft.gecko.server.gecko.lobby.mascot
 
+import net.minestom.server.MinecraftServer
 import net.minestom.server.coordinate.Pos
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
@@ -33,7 +34,9 @@ class DuckMascot(instance: Instance, pos: Pos) : Entity(EntityType.INTERACTION) 
 
     override fun updateNewViewer(player: Player) {
         super.updateNewViewer(player)
-        model.addViewer(player)
+        MinecraftServer.getSchedulerManager().scheduleNextTick {
+            if (player.isOnline) model.addViewer(player)
+        }
     }
 
     override fun updateOldViewer(player: Player) {

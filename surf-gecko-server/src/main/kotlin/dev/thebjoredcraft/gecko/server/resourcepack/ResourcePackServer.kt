@@ -14,8 +14,13 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.nio.file.Path
 import java.security.MessageDigest
+import java.util.zip.ZipEntry
+import java.util.zip.ZipFile
+import java.util.zip.ZipOutputStream
 import kotlin.io.path.Path
+import kotlin.io.path.walk
 
 object ResourcePackServer {
     private var server: EmbeddedServer<NettyApplicationEngine, NettyApplicationEngine.Configuration>? =
@@ -24,6 +29,41 @@ object ResourcePackServer {
     private val hashLock = Mutex()
     private var cachedModified = -1L
     private var cachedSha1 = ""
+
+    fun mergeDirectory(dir: Path) {
+        val packPath = Path(".").resolve(GeckoBootstrap.config.packServer.packLocation)
+        val packFile = packPath.toFile()
+        if (!packFile.exists() || !packFile.isFile) return
+
+        val tempFile = File(packFile.parentFile, packFile.name + ".tmp")
+
+        ZipFile(packFile).use { existingZip ->
+            ZipOutputStream(tempFile.outputStream().buffered()).use { zos ->
+                val existingEntries = mutableSetOf<String>()
+
+                for (entry in existingZip.entries()) {
+                    existingEntries.add(entry.name)
+                    zos.putNextEntry(ZipEntry(entry.name))
+                    existingZip.getInputStream(entry).use { it.copyTo(zos) }
+                    zos.closeEntry()
+                }
+
+                dir.walk().forEach { file ->
+                    if (file.toFile().isFile) {
+                        val entryName = dir.parent.relativize(file).toString().replace('\\', '/')
+                        if (entryName !in existingEntries) {
+                            zos.putNextEntry(ZipEntry(entryName))
+                            file.toFile().inputStream().use { it.copyTo(zos) }
+                            zos.closeEntry()
+                        }
+                    }
+                }
+            }
+        }
+
+        tempFile.renameTo(packFile)
+        cachedModified = -1L
+    }
 
     @Synchronized
     fun start() {

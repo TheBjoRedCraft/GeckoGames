@@ -49,7 +49,9 @@ object LobbyNpcManager {
                     }
 
                     NpcInteractionType.LEFT_CLICK -> {
-                        geckoGamesView.open(player)
+                        minestomAsyncScope.launch {
+                            geckoGamesView.open(player)
+                        }
                     }
                 }
             }

@@ -1,13 +1,10 @@
 package dev.thebjoredcraft.gecko.server.resourcepack.bitmap
 
-import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.format.TextColor
 import kotlin.math.absoluteValue
 
 object GeckoBitmaps {
-
-    private val FONT = Key.key("gecko", "bitmaps")
 
     private const val BG = '\uA441'
 
@@ -88,26 +85,26 @@ object GeckoBitmaps {
                 if (i > 0) bgBuilder.append(N1)
                 bgBuilder.append(BG)
             }
+            if (index < glyphs.lastIndex) bgBuilder.append(N1)
+        }
 
-            if (index < glyphs.lastIndex) {
-                bgBuilder.append(N1)
-            }
+        repeat(affixAmount) {
+            bgBuilder.append(N1).append(BG)
         }
 
         if (bgBuilder.isNotEmpty()) {
             bgBuilder.deleteCharAt(bgBuilder.length - 1)
         }
 
-        val totalWidth = glyphs.sumOf { it.width } + (glyphs.size - 1) + affixAmount
+        val totalWidth = glyphs.sumOf { it.width } - 1
         val spacingBack = negativeSpacing(totalWidth)
 
         val glyphStr = glyphs.joinToString("") { it.char.toString() }
 
         return Component.text()
-            .font(FONT)
-            .append(Component.text(bgBuilder.toString()).font(FONT).color(background))
-            .append(Component.text(spacingBack).font(FONT))
-            .append(Component.text(glyphStr).font(FONT).color(foreground))
+            .append(Component.text(bgBuilder.toString()).color(background))
+            .append(Component.text(spacingBack))
+            .append(Component.text(glyphStr).color(foreground))
             .build()
     }
 
