@@ -5,7 +5,6 @@ import dev.thebjoredcraft.gecko.server.gecko.GeckoInstance
 import dev.thebjoredcraft.gecko.server.performance.monitor.StatusBarService
 import dev.thebjoredcraft.gecko.server.resourcepack.ResourcePackServer
 import kotlinx.coroutines.runBlocking
-import kotlin.io.path.Path
 import net.minestom.server.MinecraftServer
 import net.minestom.server.MinecraftServer.LOGGER
 import org.jetbrains.annotations.Blocking
@@ -34,9 +33,7 @@ object GeckoServer {
             )
             minecraftServer.start(config.address.host, config.address.port)
 
-            //RedisService.connect()
             GeckoInstance.enable()
-            ResourcePackServer.mergeDirectory(Path("wsee").resolve("resourcepack"))
             ResourcePackServer.start()
 
             val startupDuration =
