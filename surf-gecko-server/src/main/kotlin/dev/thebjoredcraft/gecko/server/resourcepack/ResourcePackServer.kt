@@ -1,6 +1,7 @@
 package dev.thebjoredcraft.gecko.server.resourcepack
 
 import dev.thebjoredcraft.gecko.server.GeckoBootstrap
+import dev.thebjoredcraft.gecko.server.bootstrapLogger
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -110,6 +111,8 @@ object ResourcePackServer {
         }
 
         server?.start(wait = false)
+
+        bootstrapLogger.info("ResourcePackServer started on ${GeckoBootstrap.config.packServer.bindAddress}:${GeckoBootstrap.config.packServer.port}")
     }
 
     @Synchronized

@@ -59,6 +59,7 @@
       real handlers for the block entities where that is actually visible.
     -->
     <Logger level="error" name="net.minestom.server.instance.block.BlockManager"/>
+    <Logger level="WARN" name="io.ktor.server.Application"/>
 
     <Root level="info">
       <AppenderRef ref="Async"/>
