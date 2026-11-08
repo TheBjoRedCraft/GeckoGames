@@ -20,11 +20,11 @@ object LobbyNpcManager {
             displayName = translatable(
                 "lobby.npc.games.name",
                 "left_click" to buildText {
-                    white("ꑰ")
+                    white("ꢑ")
                     font(key("surf:menu"))
                 },
                 "right_click" to buildText {
-                    white("ꑲ")
+                    white("ꢐ")
                     font(key("surf:menu"))
                 }
             )
