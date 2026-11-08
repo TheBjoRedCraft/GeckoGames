@@ -99,17 +99,18 @@ class GeckoDamageListener : EventRegistrar {
         victim.playerOrNull?.let {
             it.playSound(GeckoSounds.DEATH_SELF, Sound.Emitter.self())
             ScreenShake.play(it, 0.6, 12)
-            val player = it
+
             it.showTitle {
-                title = player.translate("game.kill.title").colorIfAbsent(victim.role.color)
+                title = it.translate("game.kill.title").colorIfAbsent(victim.role.color)
                 subtitle = if (killer != null) {
-                    player.translate(
+                    it.translate(
                         "game.kill.subtitle.killer",
                         "killer" to killer.player.username
                     )
                 } else {
-                    player.translate("game.kill.subtitle.died")
+                    it.translate("game.kill.subtitle.died")
                 }
+
                 times {
                     fadeIn(2)
                     stay(30)
