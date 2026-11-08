@@ -10,7 +10,6 @@ class BeamEffect(
     origins: Collection<Point>,
     beam: ParticleBeam
 ) : GeckoEffect(8.ticks) {
-
     private val packets = origins.flatMap(beam::packetsAt)
 
     override fun isActive() = packets.isNotEmpty()
