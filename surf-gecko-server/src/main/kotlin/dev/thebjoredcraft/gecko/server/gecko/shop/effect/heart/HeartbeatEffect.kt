@@ -39,9 +39,7 @@ class HeartbeatEffect(private val player: Player) :
                 GeckoHeartbeatPulse.intervalFor(proximity).milliseconds
     }
 
-    override fun stop() {
-        TODO("Not yet implemented")
-    }
+    override fun stop() {}
 
     private fun nearestHiderDistance(): Double? {
         val game = GeckoGameManager.findGame(player.uuid) ?: return null
