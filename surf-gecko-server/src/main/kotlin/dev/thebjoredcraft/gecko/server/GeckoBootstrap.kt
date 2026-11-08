@@ -63,6 +63,7 @@ object GeckoBootstrap {
 
         EntityTickFilter.configure(EntityTypeKeys.ARMOR_STAND.key())
 
+        registerViews()
         startSurfApi(config)
 
         runBlocking {
@@ -70,7 +71,6 @@ object GeckoBootstrap {
             GeckoTranslations.reload()
         }
 
-        registerViews()
         ServerGeckoCommandRegistrar.registerAll()
         GeckoChatListener.register()
         StatusBarService.start()

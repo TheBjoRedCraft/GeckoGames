@@ -31,8 +31,9 @@ val seekerShopView = surfView("Sucher Shop") {
     }
 
     onOpen {
-        val title = player.translate("shop.menu.seeker.title")
-        modifyConfig { title(title) }
+        modifyConfig {
+            title(this@onOpen.player.translate("shop.menu.seeker.title"))
+        }
     }
 
     onInit {
