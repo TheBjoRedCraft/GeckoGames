@@ -35,7 +35,7 @@ class DuckMascot(instance: Instance, pos: Pos) : Entity(EntityType.INTERACTION) 
     override fun updateNewViewer(player: Player) {
         super.updateNewViewer(player)
         MinecraftServer.getSchedulerManager().scheduleNextTick {
-            if (player.isOnline) model.addViewer(player)
+            if (player.isOnline) runCatching { model.addViewer(player) }
         }
     }
 

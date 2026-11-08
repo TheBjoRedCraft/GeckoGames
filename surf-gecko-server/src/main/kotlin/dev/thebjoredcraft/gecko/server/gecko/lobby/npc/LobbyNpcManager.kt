@@ -2,7 +2,6 @@ package dev.thebjoredcraft.gecko.server.gecko.lobby.npc
 
 import codes.bed.minestom.npc.api.NpcInteractionType
 import dev.slne.surf.api.core.messages.adventure.buildText
-import dev.slne.surf.api.core.messages.adventure.key
 import dev.slne.surf.api.minestom.coroutine.minestomAsyncScope
 import dev.slne.surf.api.minestom.inventory.framework.open
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
@@ -21,11 +20,9 @@ object LobbyNpcManager {
                 "lobby.npc.games.name",
                 "left_click" to buildText {
                     white("ꢑ")
-                    font(key("surf:menu"))
                 },
                 "right_click" to buildText {
                     white("ꢐ")
-                    font(key("surf:menu"))
                 }
             )
             profile = ResolvableProfile(
