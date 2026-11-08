@@ -9,7 +9,7 @@ import xyz.jpenilla.gremlin.runtime.logging.Slf4jGremlinLogger
 import java.nio.file.Path
 import java.util.jar.JarFile
 
-private val downloaderLogger: ComponentLogger = ComponentLogger.logger("GremlinRuntimeDownloader")
+private val downloaderLogger: ComponentLogger = ComponentLogger.logger("GeckoDependencyResolver")
 
 object GremlinRuntimeDownloader {
 

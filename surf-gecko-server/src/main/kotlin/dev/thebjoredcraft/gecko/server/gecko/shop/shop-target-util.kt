@@ -11,7 +11,6 @@ internal fun GeckoGame.activePlayers(role: GeckoGameRole) = gamePlayers
     .mapNotNull { it.playerOrNull }
 
 internal fun GeckoGame.activeHiders() = activePlayers(GeckoGameRole.HIDER)
-
 internal fun GeckoGame.activeSeekers() = activePlayers(GeckoGameRole.SEEKER)
 
 internal fun List<Player>.otherThan(player: Player) =
