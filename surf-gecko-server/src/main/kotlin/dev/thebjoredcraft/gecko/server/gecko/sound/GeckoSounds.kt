@@ -84,7 +84,7 @@ object GeckoSounds {
     }
 
     val SONAR_WAVE = sound {
-        type(key("sonar:sonar.ping"))
+        type(key("gecko:sonar.ping"))
         source(Sound.Source.PLAYER)
         volume(2f)
     }
@@ -137,7 +137,7 @@ object GeckoSounds {
     }
 
     val PHASE_GAME_TRANSITION = sound {
-        type(key("sonar:role.reveal"))
+        type(key("gecko:role.reveal"))
     }
 
     val DIALOG_OPEN = sound {

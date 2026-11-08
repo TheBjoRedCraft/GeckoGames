@@ -76,7 +76,7 @@ object SonarWave {
             instance,
             center,
             viewer,
-            "sonar:probe",
+            "gecko:probe",
             listOf(
                 Color((slot shl 7) or duration, start.high, start.low),
                 Color(radius.toInt().coerceIn(1, 255), 0x80 or slot, 0)

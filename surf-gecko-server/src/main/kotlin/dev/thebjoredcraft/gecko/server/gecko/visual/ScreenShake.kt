@@ -22,7 +22,7 @@ object ScreenShake {
                 instance,
                 player.eyePosition(),
                 player,
-                "sonar:shake_probe",
+                "gecko:shake_probe",
                 listOf(Color(power, start.high, start.low), Color(duration, 0x80, 0xA5)),
                 cullSize = 256f,
                 viewRange = 4f

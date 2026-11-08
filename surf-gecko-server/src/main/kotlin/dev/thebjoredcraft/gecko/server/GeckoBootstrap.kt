@@ -63,13 +63,14 @@ object GeckoBootstrap {
 
         EntityTickFilter.configure(EntityTypeKeys.ARMOR_STAND.key())
 
-        registerViews()
         startSurfApi(config)
 
         runBlocking {
             GeckoTranslations.configure(config.translations)
             GeckoTranslations.reload()
         }
+
+        registerViews()
 
         ServerGeckoCommandRegistrar.registerAll()
         GeckoChatListener.register()
