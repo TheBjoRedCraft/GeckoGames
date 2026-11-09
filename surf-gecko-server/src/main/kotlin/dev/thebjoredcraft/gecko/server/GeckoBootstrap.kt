@@ -43,7 +43,9 @@ import kotlin.io.path.Path
 val bootstrapLogger: ComponentLogger = ComponentLogger.logger("GeckoBootstrap")
 
 object GeckoBootstrap {
-    lateinit var config: Config
+    val config by lazy {
+        ConfigManager.create(Path("config.yml"), RailwayConfigFormat.YAML, Config()).load()
+    }
 
     fun boot() {
         val startupStartedAt = System.nanoTime()
@@ -51,11 +53,6 @@ object GeckoBootstrap {
         bootstrapLogger.info("Booting server...")
 
         GremlinRuntimeDownloader.resolve()
-
-        val config =
-            ConfigManager.create(Path("config.yml"), RailwayConfigFormat.YAML, Config()).load()
-
-        GeckoBootstrap.config = config
 
         config.applyTickDispatcherThreads()
         config.applyChunkViewDistance()
