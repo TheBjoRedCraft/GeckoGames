@@ -14,7 +14,6 @@ import dev.thebjoredcraft.gecko.server.combat.BowCombatListener
 import dev.thebjoredcraft.gecko.server.combat.MeleeCombatListener
 import dev.thebjoredcraft.gecko.server.command.ServerGeckoCommandRegistrar
 import dev.thebjoredcraft.gecko.server.config.Config
-import dev.thebjoredcraft.gecko.server.config.ConfigLoader
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGameJoinService
 import dev.thebjoredcraft.gecko.server.gecko.death.GeckoDamageListener
 import dev.thebjoredcraft.gecko.server.gecko.display.GeckoDisplayListener
@@ -33,6 +32,8 @@ import dev.thebjoredcraft.gecko.server.performance.monitor.StatusBarService
 import dev.thebjoredcraft.gecko.server.player.LoadLanguageTask
 import dev.thebjoredcraft.gecko.server.player.PlayerConnectionService
 import dev.thebjoredcraft.gecko.server.resourcepack.ResourcePackConfigurationTask
+import dev.thebjoredcraft.railway.config.RailwayConfigFormat
+import dev.thebjoredcraft.railway.config.manager.ConfigManager
 import kotlinx.coroutines.runBlocking
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger
 import net.minestom.server.MinecraftServer
@@ -51,7 +52,8 @@ object GeckoBootstrap {
 
         GremlinRuntimeDownloader.resolve()
 
-        val config = ConfigLoader(Path("config.yml")).load()
+        val config =
+            ConfigManager.create(Path("config.yml"), RailwayConfigFormat.YAML, Config()).load()
 
         GeckoBootstrap.config = config
 
