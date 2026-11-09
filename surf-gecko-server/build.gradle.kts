@@ -31,9 +31,7 @@ dependencies {
     runtimeDownload(libs.wsee)
     compileOnly(libs.flare.fastutil)
 
-    runtimeDownload(libs.fabric.mixin)
     annotationProcessor(libs.fabric.mixin)
-    runtimeDownload(libs.mixin.extra)
     annotationProcessor(libs.mixin.extra)
 
     runtimeDownload("io.ktor:ktor-server-core")
@@ -42,9 +40,14 @@ dependencies {
 }
 
 configurations {
+    runtimeDownload {
+        extendsFrom(configurations.annotationProcessor.get())
+    }
+
     compileOnly {
         extendsFrom(configurations.runtimeDownload.get())
     }
+
 }
 
 val bundleTranslations by tasks.registering {
