@@ -51,7 +51,7 @@ object GeckoBootstrap {
     fun boot() {
         val startupStartedAt = System.nanoTime()
 
-        bootstrapLogger.info("Booting server...")
+        bootstrapLogger.info("Booting gecko server...")
 
         GremlinRuntimeDownloader.resolve()
 
@@ -117,7 +117,7 @@ object GeckoBootstrap {
             }
             withNpcLib()
             withConsole {
-                threadName = "surf-gecko-console"
+                threadName = "gecko-server-console"
                 onShutdown = { GeckoServer.shutdownAndExit("console") }
             }
             withPlugins()
