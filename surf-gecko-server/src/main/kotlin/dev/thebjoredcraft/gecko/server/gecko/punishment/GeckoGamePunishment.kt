@@ -14,11 +14,6 @@ data class GeckoGamePunishment(
     val punisherUuid: UUID?,
     val reason: String
 ) {
-    val permanent get() = expiresAt == null
-
-    val totalDuration: Duration?
-        get() = expiresAt?.let { JavaDuration.between(createdAt, it).toKotlinDuration() }
-
     fun remaining(now: OffsetDateTime = OffsetDateTime.now()): Duration? =
         expiresAt?.let { JavaDuration.between(now, it).toKotlinDuration() }
 
