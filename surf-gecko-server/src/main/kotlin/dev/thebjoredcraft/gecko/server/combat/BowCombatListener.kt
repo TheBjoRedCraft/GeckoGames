@@ -34,6 +34,9 @@ val bowFixedDamageTag: Tag<Float> = Tag.Float("surf_gecko_bow_fixed_damage")
 val bowConsumeOnShotTag: Tag<Boolean> = Tag.Boolean("surf_gecko_bow_consume_on_shot")
 
 class BowCombatListener : EventRegistrar {
+    private val maxPower = 1f
+    private val spread = 0.0075
+
     override fun register(node: EventNode<Event>) {
         node.addListener(PlayerCancelItemUseEvent::class.java, ::handleBowRelease)
         node.addListener(ProjectileCollideWithEntityEvent::class.java, ::handleArrowHit)
@@ -51,27 +54,27 @@ class BowCombatListener : EventRegistrar {
         val instance = player.instance ?: return
         val power = bowPower(event.useDuration)
 
-        if (power < MIN_POWER || !player.consumeArrow(bow)) {
+        if (power < 0.1f || !player.consumeArrow(bow)) {
             return
         }
 
         val powerLevel = bow.enchantmentLevel(Enchantment.POWER)
         val arrow = CombatArrow(player)
 
-        (arrow.entityMeta as AbstractArrowMeta).isCritical = power >= MAX_POWER
+        (arrow.entityMeta as AbstractArrowMeta).isCritical = power >= maxPower
         arrow.setTag(
             arrowDamageTag,
-            BASE_ARROW_DAMAGE + if (powerLevel > 0) powerLevel * POWER_PER_LEVEL + POWER_BASE else 0.0
+            2.0 + if (powerLevel > 0) powerLevel * 0.5 + 0.5 else 0.0
         )
         arrow.setTag(arrowPunchTag, bow.enchantmentLevel(Enchantment.PUNCH))
         bow.getTag(bowFixedDamageTag)?.let { arrow.setTag(arrowFixedDamageTag, it) }
 
-        val origin = player.position.add(0.0, player.eyeHeight - SPAWN_OFFSET, 0.0)
+        val origin = player.position.add(0.0, player.eyeHeight - 0.1, 0.0)
 
         arrow.velocity = player.position.direction().withSpread()
-            .mul((power * ARROW_BLOCKS_PER_TICK * ServerProperties.SERVER_TICKS_PER_SECOND.get()).toDouble())
+            .mul((power * 3 * ServerProperties.SERVER_TICKS_PER_SECOND.get()).toDouble())
         arrow.setInstance(instance, origin)
-        arrow.scheduleRemove(Duration.ofSeconds(ARROW_LIFETIME_SECONDS))
+        arrow.scheduleRemove(Duration.ofSeconds(60))
 
         player.playBowSound(power)
 
@@ -115,7 +118,7 @@ class BowCombatListener : EventRegistrar {
         if (applied) {
             target.takeKnockbackFrom(
                 arrow.velocity.normalize(),
-                BASE_ARROW_KNOCKBACK + arrow.getTag(arrowPunchTag) * KNOCKBACK_PER_LEVEL
+                0.4f + arrow.getTag(arrowPunchTag) * KNOCKBACK_PER_LEVEL
             )
 
             (shooter as? Player)?.playSound(true) {
@@ -136,16 +139,16 @@ class BowCombatListener : EventRegistrar {
     private fun bowPower(useDurationTicks: Long): Float {
         val seconds = useDurationTicks.toFloat() / ServerProperties.SERVER_TICKS_PER_SECOND.get()
 
-        return ((seconds * seconds + seconds * 2f) / 3f).coerceAtMost(MAX_POWER)
+        return ((seconds * seconds + seconds * 2f) / 3f).coerceAtMost(maxPower)
     }
 
     private fun Vec.withSpread(): Vec {
         val random = ThreadLocalRandom.current()
 
         return Vec(
-            x() + random.nextGaussian() * SPREAD,
-            y() + random.nextGaussian() * SPREAD,
-            z() + random.nextGaussian() * SPREAD
+            x() + random.nextGaussian() * spread,
+            y() + random.nextGaussian() * spread,
+            z() + random.nextGaussian() * spread
         )
     }
 
@@ -176,18 +179,5 @@ class BowCombatListener : EventRegistrar {
             position.y(),
             position.z()
         )
-    }
-
-    private companion object {
-        const val MIN_POWER = 0.1f
-        const val MAX_POWER = 1f
-        const val ARROW_BLOCKS_PER_TICK = 3f
-        const val SPAWN_OFFSET = 0.1
-        const val SPREAD = 0.0075
-        const val BASE_ARROW_DAMAGE = 2.0
-        const val POWER_PER_LEVEL = 0.5
-        const val POWER_BASE = 0.5
-        const val BASE_ARROW_KNOCKBACK = 0.4f
-        const val ARROW_LIFETIME_SECONDS = 60L
     }
 }
