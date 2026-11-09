@@ -2,7 +2,7 @@ package dev.thebjoredcraft.gecko.server.i18n
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
-import dev.thebjoredcraft.gecko.server.config.Config
+import dev.thebjoredcraft.gecko.server.config.GeckoServerConfig
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger
 import java.net.URI
 import java.net.URLEncoder
@@ -13,9 +13,9 @@ import java.nio.charset.StandardCharsets
 import java.time.Duration
 import kotlin.io.path.*
 
-class GeckoTranslationLoader(private val config: Config.TranslationsConfig) {
+class GeckoTranslationLoader(private val geckoServerConfig: GeckoServerConfig.TranslationsConfig) {
     private val logger = ComponentLogger.logger("GeckoTranslations")
-    private val cacheDirectory = Path(config.cacheDirectory)
+    private val cacheDirectory = Path(geckoServerConfig.cacheDirectory)
     private val http = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(5))
         .followRedirects(HttpClient.Redirect.NORMAL)
@@ -57,7 +57,7 @@ class GeckoTranslationLoader(private val config: Config.TranslationsConfig) {
 
     private fun fetchFromGitHub(): Map<GeckoLanguage, Map<String, String>> =
         GeckoLanguage.entries.associateWith { language ->
-            val directory = "${config.path.trim('/')}/${language.id}"
+            val directory = "${geckoServerConfig.path.trim('/')}/${language.id}"
             val listing =
                 JsonParser.parseString(request(contentsUrl(directory), raw = false)).asJsonArray
 
@@ -73,8 +73,8 @@ class GeckoTranslationLoader(private val config: Config.TranslationsConfig) {
         val encodedPath = path.split('/').joinToString("/") {
             URLEncoder.encode(it, StandardCharsets.UTF_8).replace("+", "%20")
         }
-        val ref = URLEncoder.encode(config.branch, StandardCharsets.UTF_8)
-        return URI.create("https://api.github.com/repos/${config.repository}/contents/$encodedPath?ref=$ref")
+        val ref = URLEncoder.encode(geckoServerConfig.branch, StandardCharsets.UTF_8)
+        return URI.create("https://api.github.com/repos/${geckoServerConfig.repository}/contents/$encodedPath?ref=$ref")
     }
 
     private fun request(uri: URI, raw: Boolean): String {
@@ -86,9 +86,9 @@ class GeckoTranslationLoader(private val config: Config.TranslationsConfig) {
             )
             .header("User-Agent", "surf-gecko")
             .apply {
-                if (config.token.isNotBlank()) header(
+                if (geckoServerConfig.token.isNotBlank()) header(
                     "Authorization",
-                    "Bearer ${config.token}"
+                    "Bearer ${geckoServerConfig.token}"
                 )
             }
             .GET()

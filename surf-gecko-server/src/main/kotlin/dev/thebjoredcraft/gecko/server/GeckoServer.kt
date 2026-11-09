@@ -1,6 +1,6 @@
 package dev.thebjoredcraft.gecko.server
 
-import dev.thebjoredcraft.gecko.server.config.Config
+import dev.thebjoredcraft.gecko.server.config.GeckoServerConfig
 import dev.thebjoredcraft.gecko.server.gecko.GeckoInstance
 import dev.thebjoredcraft.gecko.server.performance.monitor.StatusBarService
 import dev.thebjoredcraft.gecko.server.resourcepack.ResourcePackServer
@@ -18,7 +18,11 @@ object GeckoServer {
     private val started = AtomicBoolean()
     private val stopped = AtomicBoolean()
 
-    suspend fun start(minecraftServer: MinecraftServer, config: Config, startupStartedAt: Long) {
+    suspend fun start(
+        minecraftServer: MinecraftServer,
+        geckoServerConfig: GeckoServerConfig,
+        startupStartedAt: Long
+    ) {
         check(started.compareAndSet(false, true)) {
             "Gecko server has already been started"
         }
@@ -28,10 +32,10 @@ object GeckoServer {
 
             LOGGER.info(
                 "Binding server to {}:{}.",
-                config.address.host,
-                config.address.port,
+                geckoServerConfig.address.host,
+                geckoServerConfig.address.port,
             )
-            minecraftServer.start(config.address.host, config.address.port)
+            minecraftServer.start(geckoServerConfig.address.host, geckoServerConfig.address.port)
 
             GeckoInstance.enable()
             ResourcePackServer.start()

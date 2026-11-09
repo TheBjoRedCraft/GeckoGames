@@ -1,6 +1,6 @@
 package dev.thebjoredcraft.gecko.server.i18n
 
-import dev.thebjoredcraft.gecko.server.config.Config
+import dev.thebjoredcraft.gecko.server.config.GeckoServerConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -33,8 +33,8 @@ object GeckoTranslations {
 
     private lateinit var loader: GeckoTranslationLoader
 
-    fun configure(config: Config.TranslationsConfig) {
-        loader = GeckoTranslationLoader(config)
+    fun configure(geckoServerConfig: GeckoServerConfig.TranslationsConfig) {
+        loader = GeckoTranslationLoader(geckoServerConfig)
     }
 
     suspend fun reload(): GeckoTranslationLoader.Result = reloadMutex.withLock {

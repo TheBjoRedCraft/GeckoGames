@@ -13,7 +13,7 @@ import dev.thebjoredcraft.gecko.server.chat.GeckoChatListener
 import dev.thebjoredcraft.gecko.server.combat.BowCombatListener
 import dev.thebjoredcraft.gecko.server.combat.MeleeCombatListener
 import dev.thebjoredcraft.gecko.server.command.ServerGeckoCommandRegistrar
-import dev.thebjoredcraft.gecko.server.config.Config
+import dev.thebjoredcraft.gecko.server.config.GeckoServerConfig
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGameJoinService
 import dev.thebjoredcraft.gecko.server.gecko.death.GeckoDamageListener
 import dev.thebjoredcraft.gecko.server.gecko.display.GeckoDisplayListener
@@ -43,8 +43,9 @@ import kotlin.io.path.Path
 val bootstrapLogger: ComponentLogger = ComponentLogger.logger("GeckoBootstrap")
 
 object GeckoBootstrap {
-    val config by lazy {
-        ConfigManager.create(Path("config.yml"), RailwayConfigFormat.YAML, Config()).load()
+    val geckoServerConfig by lazy {
+        ConfigManager.create(Path("config.yml"), RailwayConfigFormat.YAML, GeckoServerConfig())
+            .load()
     }
 
     fun boot() {
@@ -65,7 +66,7 @@ object GeckoBootstrap {
         bootSurfApiMinestom()
 
         runBlocking {
-            GeckoTranslations.configure(config.translations)
+            GeckoTranslations.configure(geckoServerConfig.translations)
             GeckoTranslations.reload()
         }
 
@@ -76,18 +77,18 @@ object GeckoBootstrap {
         StatusBarService.start()
 
         runBlocking {
-            GeckoServer.start(minecraftServer, config, startupStartedAt)
+            GeckoServer.start(minecraftServer, geckoServerConfig, startupStartedAt)
         }
     }
 
     private fun initMinecraftServer(): MinecraftServer {
         bootstrapLogger.info(
             "Initializing gecko server for {}:{}.",
-            config.address.host,
-            config.address.port,
+            geckoServerConfig.address.host,
+            geckoServerConfig.address.port,
         )
 
-        val minecraftServer = MinecraftServer.init(config.velocity.createAuth())
+        val minecraftServer = MinecraftServer.init(geckoServerConfig.velocity.createAuth())
 
         MinecraftServer.setCompressionThreshold(0)
         return minecraftServer
@@ -95,7 +96,7 @@ object GeckoBootstrap {
 
     private fun bootSurfApiMinestom() {
         surfMinestomServer {
-            maxPlayers = config.maxPlayers
+            maxPlayers = geckoServerConfig.maxPlayers
 
             withConfigurationPhase {
                 after(ConfigurationTasks.AWAIT_SETTINGS, LoadLanguageTask.ID, LoadLanguageTask)
@@ -107,12 +108,12 @@ object GeckoBootstrap {
 
             withLuckPerms()
             withSignedChat {
-                enforceSecureProfile = config.chat.enforceSecureProfile
-                chatSpamThresholdSeconds = config.chat.chatSpamThresholdSeconds
-                commandSpamThresholdSeconds = config.chat.commandSpamThresholdSeconds
+                enforceSecureProfile = geckoServerConfig.chat.enforceSecureProfile
+                chatSpamThresholdSeconds = geckoServerConfig.chat.chatSpamThresholdSeconds
+                commandSpamThresholdSeconds = geckoServerConfig.chat.commandSpamThresholdSeconds
             }
             withSpark {
-                profileOnStartup = config.performance.spark.profileOnStartup
+                profileOnStartup = geckoServerConfig.performance.spark.profileOnStartup
             }
             withNpcLib()
             withConsole {
@@ -176,8 +177,8 @@ object GeckoBootstrap {
         }
 
         val threads =
-            if (config.performance.tickThreads <= 0) Runtime.getRuntime()
-                .availableProcessors() else config.performance.tickThreads
+            if (geckoServerConfig.performance.tickThreads <= 0) Runtime.getRuntime()
+                .availableProcessors() else geckoServerConfig.performance.tickThreads
 
         System.setProperty(DISPATCHER_THREADS_PROPERTY, threads.toString())
         bootstrapLogger.info("Using {} tick dispatcher thread(s).", threads)
@@ -195,11 +196,11 @@ object GeckoBootstrap {
 
         System.setProperty(
             "minestom.chunk-view-distance",
-            config.performance.viewDistance.toString()
+            geckoServerConfig.performance.viewDistance.toString()
         )
         bootstrapLogger.info(
             "Using a chunk view distance of {} chunks.",
-            config.performance.viewDistance
+            geckoServerConfig.performance.viewDistance
         )
     }
 }

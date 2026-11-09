@@ -19,11 +19,11 @@ object ResourcePackConfigurationTask : ConfigurationTask {
             return
         }
 
-        if (!GeckoBootstrap.config.packServer.enabled) {
+        if (!GeckoBootstrap.geckoServerConfig.packServer.enabled) {
             return
         }
 
-        val url = GeckoBootstrap.config.packServer.resourcePackUrl()
+        val url = GeckoBootstrap.geckoServerConfig.packServer.resourcePackUrl()
 
         minestomAsyncScope.launch {
             val sha1 = ResourcePackServer.sha1()

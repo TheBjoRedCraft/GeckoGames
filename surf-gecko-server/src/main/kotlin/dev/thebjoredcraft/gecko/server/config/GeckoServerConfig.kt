@@ -6,7 +6,7 @@ import org.spongepowered.configurate.objectmapping.meta.Comment
 import org.spongepowered.configurate.objectmapping.meta.Setting
 
 @ConfigSerializable
-data class Config(
+data class GeckoServerConfig(
     @Setting("address")
     val address: AddressConfig = AddressConfig(),
 

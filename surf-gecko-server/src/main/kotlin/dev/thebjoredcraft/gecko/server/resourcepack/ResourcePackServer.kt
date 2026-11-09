@@ -32,14 +32,14 @@ object ResourcePackServer {
             return
         }
 
-        val packFile = GeckoBootstrap.config.packServer.packLocation.let { path ->
+        val packFile = GeckoBootstrap.geckoServerConfig.packServer.packLocation.let { path ->
             Path(".").resolve(path)
         }.toFile()
 
         server = embeddedServer(
             Netty,
-            GeckoBootstrap.config.packServer.port,
-            GeckoBootstrap.config.packServer.bindAddress
+            GeckoBootstrap.geckoServerConfig.packServer.port,
+            GeckoBootstrap.geckoServerConfig.packServer.bindAddress
         ) {
             install(AutoHeadResponse)
 
@@ -72,7 +72,7 @@ object ResourcePackServer {
 
         server?.start(wait = false)
 
-        bootstrapLogger.info("ResourcePackServer started on ${GeckoBootstrap.config.packServer.bindAddress}:${GeckoBootstrap.config.packServer.port}")
+        bootstrapLogger.info("ResourcePackServer started on ${GeckoBootstrap.geckoServerConfig.packServer.bindAddress}:${GeckoBootstrap.geckoServerConfig.packServer.port}")
     }
 
     @Synchronized
@@ -82,7 +82,7 @@ object ResourcePackServer {
     }
 
     suspend fun sha1(): String {
-        val packFile = GeckoBootstrap.config.packServer.packLocation.let { path ->
+        val packFile = GeckoBootstrap.geckoServerConfig.packServer.packLocation.let { path ->
             Path(".").resolve(path)
         }.toFile()
         return sha1(packFile)
