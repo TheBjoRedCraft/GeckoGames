@@ -6,6 +6,7 @@ import dev.slne.surf.api.minestom.coroutine.minestomAsyncScope
 import dev.slne.surf.api.minestom.inventory.framework.open
 import dev.thebjoredcraft.gecko.server.gecko.GeckoGameManager
 import dev.thebjoredcraft.gecko.server.gecko.lobby.GeckoLobby
+import dev.thebjoredcraft.gecko.server.gecko.lobby.npc.internal.equipableMannequinNpc
 import dev.thebjoredcraft.gecko.server.gecko.lobby.view.geckoGamesView
 import dev.thebjoredcraft.gecko.server.i18n.sendTranslated
 import dev.thebjoredcraft.gecko.server.i18n.translatable
