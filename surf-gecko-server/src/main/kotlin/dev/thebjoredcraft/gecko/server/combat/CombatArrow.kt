@@ -13,12 +13,13 @@ class CombatArrow(shooter: Entity) : EntityProjectile(shooter, EntityType.ARROW)
 
     override fun tick(time: Long) {
         alignWithVelocity(velocity)
+
         super.tick(time)
         updateShooterClearance()
     }
 
     private fun updateShooterClearance() {
-        if (hasLeftShooter || isRemoved) {
+        if (hasLeftShooter || this.isRemoved) {
             return
         }
 
@@ -30,7 +31,7 @@ class CombatArrow(shooter: Entity) : EntityProjectile(shooter, EntityType.ARROW)
         }
 
         hasLeftShooter = !boundingBox
-            .grow(SHOOTER_CLEARANCE, SHOOTER_CLEARANCE, SHOOTER_CLEARANCE)
+            .grow(1.0, 1.0, 1.0)
             .intersectEntity(position, shootingEntity)
     }
 
@@ -45,9 +46,5 @@ class CombatArrow(shooter: Entity) : EntityProjectile(shooter, EntityType.ARROW)
             Math.toDegrees(atan2(velocity.x(), velocity.z())).toFloat(),
             Math.toDegrees(atan2(velocity.y(), horizontal)).toFloat()
         )
-    }
-
-    private companion object {
-        const val SHOOTER_CLEARANCE = 1.0
     }
 }
