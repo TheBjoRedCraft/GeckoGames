@@ -37,14 +37,14 @@ class MeleeCombatListener : EventRegistrar {
 
         val weapon = attacker.itemInMainHand
         val attackDamage = attacker.getAttributeValue(Attribute.ATTACK_DAMAGE).toFloat()
-        val critical = strength > CRITICAL_STRENGTH &&
+        val critical = strength > 0.9f &&
                 !attacker.isOnGround &&
                 attacker.velocity.y() < 0.0 &&
                 !attacker.isSprinting
 
         val amount =
-            (attackDamage * (WEAK_DAMAGE_RATIO + strength * strength * (1f - WEAK_DAMAGE_RATIO)) +
-                    weapon.sharpnessBonus() * strength) * if (critical) CRITICAL_MULTIPLIER else 1f
+            (attackDamage * (0.2f + strength * strength * (1f - 0.2f)) +
+                    weapon.sharpnessBonus() * strength) * if (critical) 1.5f else 1f
 
         val applied = target.damageWithInvulnerability(
             Damage(DamageType.PLAYER_ATTACK, attacker, attacker, attacker.position, amount)
@@ -56,7 +56,7 @@ class MeleeCombatListener : EventRegistrar {
 
             target.takeKnockbackFrom(
                 attacker.position.direction(),
-                BASE_KNOCKBACK + knockbackLevel * KNOCKBACK_PER_LEVEL
+                0.4f + knockbackLevel * KNOCKBACK_PER_LEVEL
             )
         }
 
@@ -64,7 +64,7 @@ class MeleeCombatListener : EventRegistrar {
     }
 
     private fun Player.attackStrengthScale(): Float {
-        val attackSpeed = getAttributeValue(Attribute.ATTACK_SPEED).coerceAtLeast(MIN_ATTACK_SPEED)
+        val attackSpeed = getAttributeValue(Attribute.ATTACK_SPEED).coerceAtLeast(0.1)
         val cooldownTicks = ServerProperties.SERVER_TICKS_PER_SECOND.get() / attackSpeed
         val elapsedTicks = (aliveTicks - getTag(lastAttackTickTag)).toDouble()
 
@@ -74,7 +74,7 @@ class MeleeCombatListener : EventRegistrar {
     private fun ItemStack.sharpnessBonus(): Float {
         val level = enchantmentLevel(Enchantment.SHARPNESS)
 
-        return if (level <= 0) 0f else SHARPNESS_BASE + (level - 1) * SHARPNESS_PER_LEVEL
+        return if (level <= 0) 0f else 1f + (level - 1) * 0.5f
     }
 
     private fun Player.playAttackSound(critical: Boolean, strength: Float, applied: Boolean) {
@@ -83,7 +83,7 @@ class MeleeCombatListener : EventRegistrar {
             !applied -> "entity.player.attack.nodamage"
             critical -> "entity.player.attack.crit"
             isSprinting -> "entity.player.attack.knockback"
-            strength > STRONG_STRENGTH -> "entity.player.attack.strong"
+            strength > 0.9f -> "entity.player.attack.strong"
             else -> "entity.player.attack.weak"
         }
 
@@ -96,16 +96,5 @@ class MeleeCombatListener : EventRegistrar {
             position.y(),
             position.z()
         )
-    }
-
-    private companion object {
-        const val WEAK_DAMAGE_RATIO = 0.2f
-        const val CRITICAL_STRENGTH = 0.9f
-        const val CRITICAL_MULTIPLIER = 1.5f
-        const val STRONG_STRENGTH = 0.9f
-        const val BASE_KNOCKBACK = 0.4f
-        const val SHARPNESS_BASE = 1f
-        const val SHARPNESS_PER_LEVEL = 0.5f
-        const val MIN_ATTACK_SPEED = 0.1
     }
 }

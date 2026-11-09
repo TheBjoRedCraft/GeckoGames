@@ -10,7 +10,6 @@ import net.minestom.server.item.enchant.Enchantment
 import net.minestom.server.registry.RegistryKey
 import net.minestom.server.tag.Tag
 
-internal const val INVULNERABILITY_TICKS = 10L
 internal const val KNOCKBACK_PER_LEVEL = 0.5f
 
 private val lastHurtTickTag = Tag.Long("surf_gecko_last_hurt_tick").defaultValue(0L)
@@ -27,7 +26,7 @@ internal fun LivingEntity.damageWithInvulnerability(damage: Damage): Boolean {
         return false
     }
 
-    if (aliveTicks - getTag(lastHurtTickTag) < INVULNERABILITY_TICKS) {
+    if (aliveTicks - getTag(lastHurtTickTag) < 10L) {
         val lastAmount = getTag(lastHurtAmountTag)
 
         if (amount <= lastAmount) {
