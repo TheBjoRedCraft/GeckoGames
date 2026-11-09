@@ -14,7 +14,6 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
-import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
 import org.bukkit.event.block.BlockPlaceEvent
 import org.bukkit.event.player.PlayerDropItemEvent
@@ -154,7 +153,7 @@ class MarkerToolListener : Listener {
         event: PlayerInteractEvent,
     ) {
         val reference = event.clickedBlock?.location?.add(0.5, 0.0, 0.5) ?: player.eyeLocation
-        val removed = draft.remove(type, reference, REMOVE_RADIUS)
+        val removed = draft.remove(type, reference, 4.0)
 
         MarkerRenderer.refresh(player)
 
@@ -178,14 +177,4 @@ class MarkerToolListener : Listener {
 
     private fun readable(pos: DraftPos) =
         "%.1f / %.1f / %.1f".format(Locale.ROOT, pos.x, pos.y, pos.z)
-
-    private val Action.isRightClick
-        get() = this == Action.RIGHT_CLICK_BLOCK || this == Action.RIGHT_CLICK_AIR
-
-    private val Action.isLeftClick
-        get() = this == Action.LEFT_CLICK_BLOCK || this == Action.LEFT_CLICK_AIR
-
-    private companion object {
-        const val REMOVE_RADIUS = 4.0
-    }
 }
