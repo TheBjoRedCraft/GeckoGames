@@ -44,18 +44,18 @@ object GeckoServer {
                 (System.nanoTime() - startupStartedAt).nanoseconds.inWholeMilliseconds.milliseconds
 
             LOGGER.info(
-                "surf-gecko is ready in {}.",
+                "gecko server is ready in {}.",
                 startupDuration,
             )
         } catch (startupFailure: Throwable) {
             LOGGER.error(
-                "Failed to start surf-gecko server.",
+                "Failed to start gecko server.",
                 startupFailure,
             )
 
             runCatching { stop() }.onFailure { failure ->
                 startupFailure.addSuppressed(failure)
-                LOGGER.error("Failed to stop surf-gecko after startup failure.", failure)
+                LOGGER.error("Failed to stop gecko server after startup failure.", failure)
             }
 
             throw startupFailure
@@ -79,7 +79,7 @@ object GeckoServer {
                 stop()
             }.onFailure {
                 LOGGER.error(
-                    "Failed to stop Surf gecko server from {}.",
+                    "Failed to stop gecko server from {}.",
                     source,
                     it,
                 )
@@ -94,7 +94,7 @@ object GeckoServer {
             return
         }
 
-        LOGGER.info("Stopping Surf gecko.")
+        LOGGER.info("Stopping gecko server.")
 
         var failure: Throwable? = null
 
@@ -130,7 +130,7 @@ object GeckoServer {
         }
 
         if (failure == null) {
-            LOGGER.info("Surf gecko stopped successfully.")
+            LOGGER.info("Gecko server stopped successfully.")
         } else {
             throw failure
         }
@@ -152,7 +152,7 @@ object GeckoServer {
                         }.onFailure(Throwable::printStackTrace)
                     }
                 },
-                "surf-gecko-shutdown",
+                "gecko-server-shutdown",
             )
         )
     }

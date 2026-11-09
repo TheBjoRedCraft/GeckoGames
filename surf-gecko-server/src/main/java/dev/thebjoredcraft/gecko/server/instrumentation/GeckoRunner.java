@@ -35,7 +35,7 @@ public final class GeckoRunner {
       LuckPermsAgent.agentmain(agentArgs, instrumentation);
     } catch (Throwable e) {
       e.printStackTrace();
-      throw new RuntimeException("Failed to bootstrap surf gecko instrumentation", e);
+      throw new RuntimeException("Failed to bootstrap gecko server instrumentation", e);
     }
   }
 
@@ -44,7 +44,8 @@ public final class GeckoRunner {
     Path jarPath = Path.of(location);
 
     try (JarFile jar = new JarFile(jarPath.toFile())) {
-      String attribute = jar.getManifest().getMainAttributes().getValue(SURF_MIXIN_CONFIGS_ATTRIBUTE);
+      String attribute = jar.getManifest().getMainAttributes()
+          .getValue(SURF_MIXIN_CONFIGS_ATTRIBUTE);
 
       if (attribute == null || attribute.isBlank()) {
         return List.of();
