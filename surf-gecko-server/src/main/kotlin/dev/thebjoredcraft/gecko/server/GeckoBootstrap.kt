@@ -54,15 +54,15 @@ object GeckoBootstrap {
 
         GremlinRuntimeDownloader.resolve()
 
-        config.applyTickDispatcherThreads()
-        config.applyChunkViewDistance()
+        applyTickDispatcherThreads()
+        applyChunkViewDistance()
         applyKeepAliveDelay()
 
-        val minecraftServer = initMinecraftServer(config)
+        val minecraftServer = initMinecraftServer()
 
         EntityTickFilter.configure(EntityTypeKeys.ARMOR_STAND.key())
 
-        startSurfApi(config)
+        initSurfApi()
 
         runBlocking {
             GeckoTranslations.configure(config.translations)
@@ -80,7 +80,7 @@ object GeckoBootstrap {
         }
     }
 
-    private fun initMinecraftServer(config: Config): MinecraftServer {
+    private fun initMinecraftServer(): MinecraftServer {
         bootstrapLogger.info(
             "Initializing gecko server for {}:{}.",
             config.address.host,
@@ -93,7 +93,7 @@ object GeckoBootstrap {
         return minecraftServer
     }
 
-    private fun startSurfApi(config: Config) {
+    private fun initSurfApi() {
         surfMinestomServer {
             maxPlayers = config.maxPlayers
 
@@ -164,7 +164,7 @@ object GeckoBootstrap {
         bootstrapLogger.info("Sending keep alives every {}ms.", KEEP_ALIVE_DELAY_MILLIS)
     }
 
-    private fun Config.applyTickDispatcherThreads() {
+    private fun applyTickDispatcherThreads() {
         val existing = System.getProperty(DISPATCHER_THREADS_PROPERTY)
         if (existing != null) {
             bootstrapLogger.info(
@@ -176,14 +176,14 @@ object GeckoBootstrap {
         }
 
         val threads =
-            if (performance.tickThreads <= 0) Runtime.getRuntime()
-                .availableProcessors() else performance.tickThreads
+            if (config.performance.tickThreads <= 0) Runtime.getRuntime()
+                .availableProcessors() else config.performance.tickThreads
 
         System.setProperty(DISPATCHER_THREADS_PROPERTY, threads.toString())
         bootstrapLogger.info("Using {} tick dispatcher thread(s).", threads)
     }
 
-    private fun Config.applyChunkViewDistance() {
+    private fun applyChunkViewDistance() {
         val existing = System.getProperty("minestom.chunk-view-distance")
         if (existing != null) {
             bootstrapLogger.info(
@@ -193,7 +193,13 @@ object GeckoBootstrap {
             return
         }
 
-        System.setProperty("minestom.chunk-view-distance", performance.viewDistance.toString())
-        bootstrapLogger.info("Using a chunk view distance of {} chunks.", performance.viewDistance)
+        System.setProperty(
+            "minestom.chunk-view-distance",
+            config.performance.viewDistance.toString()
+        )
+        bootstrapLogger.info(
+            "Using a chunk view distance of {} chunks.",
+            config.performance.viewDistance
+        )
     }
 }
