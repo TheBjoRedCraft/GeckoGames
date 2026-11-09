@@ -62,7 +62,7 @@ object GeckoBootstrap {
 
         EntityTickFilter.configure(EntityTypeKeys.ARMOR_STAND.key())
 
-        initSurfApi()
+        bootSurfApiMinestom()
 
         runBlocking {
             GeckoTranslations.configure(config.translations)
@@ -93,7 +93,7 @@ object GeckoBootstrap {
         return minecraftServer
     }
 
-    private fun initSurfApi() {
+    private fun bootSurfApiMinestom() {
         surfMinestomServer {
             maxPlayers = config.maxPlayers
 
